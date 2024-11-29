@@ -1,16 +1,21 @@
 import { defineConfig } from "vite";
+import { resolve, join } from "path";
 import react from "@vitejs/plugin-react-swc";
 
-// https://vitejs.dev/config/
 export default defineConfig({
+  resolve: {
+    alias: {
+      "@": resolve(join(process.cwd(), "src")),
+      pages: resolve(join(process.cwd(), "src/pages")),
+      hooks: resolve(join(process.cwd(), "src/components/hooks")),
+      components: resolve(join(process.cwd(), "src/components")),
+    },
+  },
   plugins: [react()],
-  // prevent vite from obscuring rust errors
   clearScreen: false,
-  // Tauri expects a fixed port, fail if that port is not available
   server: {
     strictPort: true,
   },
-  // to access the Tauri environment variables set by the CLI with information about the current target
   envPrefix: [
     "VITE_",
     "TAURI_PLATFORM",
@@ -21,14 +26,11 @@ export default defineConfig({
     "TAURI_DEBUG",
   ],
   build: {
-    // Tauri uses Chromium on Windows and WebKit on macOS and Linux
     target: process.env.TAURI_PLATFORM == "windows" ? "chrome105" : "safari13",
-    // don't minify for debug builds
     minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
-    // produce sourcemaps for debug builds
     sourcemap: !!process.env.TAURI_DEBUG,
   },
   optimizeDeps: {
-    force: true
-  } 
+    force: true,
+  },
 });
