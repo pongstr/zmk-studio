@@ -32,7 +32,7 @@ interface LayerPickerProps {
   onLayerNameChanged?: (
     id: number,
     oldName: string,
-    newName: string
+    newName: string,
   ) => void | Promise<void>;
 }
 
@@ -53,7 +53,7 @@ const EditLabelModal = ({
   handleSaveNewLabel: (
     id: number,
     oldName: string,
-    newName: string | null
+    newName: string | null,
   ) => void;
 }) => {
   const ref = useModalRef(open);
@@ -115,7 +115,7 @@ export const LayerPicker = ({
   ...props
 }: LayerPickerProps) => {
   const [editLabelData, setEditLabelData] = useState<EditLabelData | null>(
-    null
+    null,
   );
 
   const layer_items = useMemo(() => {
@@ -135,7 +135,7 @@ export const LayerPicker = ({
 
       onLayerClicked?.(layer_items.findIndex((l) => s.has(l.id)));
     },
-    [onLayerClicked, layer_items]
+    [onLayerClicked, layer_items],
   );
 
   const { dragAndDropHooks } = useDragAndDrop({
@@ -162,7 +162,7 @@ export const LayerPicker = ({
         onLayerNameChanged?.(id, oldName, newName);
       }
     },
-    [onLayerNameChanged]
+    [onLayerNameChanged],
   );
 
   return (
@@ -172,7 +172,7 @@ export const LayerPicker = ({
         {onRemoveClicked && (
           <button
             type="button"
-            className="rounded-sm hover:bg-primary hover:text-primary-content"
+            className="rounded-sm hover:bg-primary hover:text-primary-content disabled:cursor-not-allowed disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-primary-content"
             disabled={!canRemove}
             onClick={onRemoveClicked}
           >
@@ -183,7 +183,7 @@ export const LayerPicker = ({
           <button
             type="button"
             disabled={!canAdd}
-            className="ml-1 rounded-sm hover:bg-primary hover:text-primary-content disabled:cursor-not-allowed disabled:text-gray-500 disabled:hover:bg-base-300"
+            className="rounded-sm hover:bg-primary hover:text-primary-content disabled:cursor-not-allowed disabled:opacity-20 disabled:hover:bg-transparent disabled:hover:text-primary-content"
             onClick={onAddClicked}
           >
             <Plus className="size-4" />

@@ -309,7 +309,11 @@ export default function Keyboard() {
   );
 
   const selectedBinding = useMemo(() => {
-    if (keymap == null || selectedKeyPosition == null) {
+    if (
+      keymap == null ||
+      selectedKeyPosition == null ||
+      !keymap.layers[selectedLayerIndex]
+    ) {
       return null;
     }
 
@@ -510,6 +514,16 @@ export default function Keyboard() {
     },
     [undoRedo, conn.conn, setKeymap],
   );
+
+  useEffect(() => {
+    if (!keymap?.layers) return;
+
+    const layers = keymap.layers.length - 1 ?? 0;
+
+    if (selectedLayerIndex > layers) {
+      setSelectedLayerIndex(layers);
+    }
+  }, [keymap, selectedLayerIndex]);
 
   return (
     <div className="grid min-h-0 min-w-0 max-w-full grid-cols-[auto_1fr] grid-rows-[1fr_minmax(10em,auto)] bg-base-300">
