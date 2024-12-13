@@ -1,6 +1,8 @@
 import {
   CSSProperties,
+  Dispatch,
   PropsWithChildren,
+  SetStateAction,
   useLayoutEffect,
   useRef,
   useState,
@@ -26,7 +28,7 @@ interface PhysicalLayoutProps {
   oneU?: number;
   hoverZoom?: boolean;
   zoom?: LayoutZoom;
-  onPositionClicked?: (position: number) => void;
+  onPositionClicked?: Dispatch<SetStateAction<number | undefined>>;
 }
 
 interface PhysicalLayoutPositionLocation {
@@ -58,7 +60,6 @@ function scalePosition(
     left,
     transformOrigin,
     transform,
-    willChange: "transform",
   };
 }
 
@@ -118,7 +119,11 @@ export const PhysicalLayout = ({
   const positionItems = positions.map((p, idx) => (
     <div
       key={idx}
-      onClick={() => onPositionClicked?.(idx)}
+      onClick={() =>
+        onPositionClicked?.((prev: number | undefined) =>
+          prev !== idx ? idx : undefined,
+        )
+      }
       className="absolute leading-[0] data-[zoomer=true]:hover:z-[1000]"
       data-zoomer={hoverZoom}
       style={scalePosition(p, oneU)}

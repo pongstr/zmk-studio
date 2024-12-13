@@ -518,7 +518,7 @@ export default function Keyboard() {
   useEffect(() => {
     if (!keymap?.layers) return;
 
-    const layers = keymap.layers.length - 1 ?? 0;
+    const layers = keymap.layers.length - 1; 
 
     if (selectedLayerIndex > layers) {
       setSelectedLayerIndex(layers);
