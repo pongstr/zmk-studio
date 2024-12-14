@@ -1,3 +1,5 @@
+import { ChevronDown } from "lucide-react";
+import { useCallback, useMemo } from "react";
 import {
   Button,
   Checkbox,
@@ -13,12 +15,11 @@ import {
   Popover,
   Section,
 } from "react-aria-components";
+
 import {
   hid_usage_from_page_and_id,
   hid_usage_page_get_ids,
 } from "../hid-usages";
-import { useCallback, useMemo } from "react";
-import { ChevronDown } from "lucide-react";
 
 export interface HidUsagePage {
   id: number;

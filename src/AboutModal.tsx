@@ -1,47 +1,34 @@
 import React from "react";
-import { useModalRef } from "./misc/useModalRef";
 
 import cannonKeys from "./assets/cannonkeys.png";
 import cannonKeysDarkMode from "./assets/cannonkeys-dark-mode.png";
-
-import niceAndTyperactive from "./assets/niceandtyperactive.png";
-import niceAndTyperactiveDarkMode from "./assets/niceandtyperactive-dark-mode.png";
-
-import kinesis from "./assets/kinesis.png";
-import kinesisDarkMode from "./assets/kinesis-dark-mode.png";
-
-import keychron from "./assets/keychron.png";
-import keychronDarkMode from "./assets/keychron-dark-mode.png";
-
-import littleKeyboards from "./assets/littlekeyboards.avif";
-import littleKeyboardsDarkMode from "./assets/littlekeyboards-dark-mode.avif";
-
-import keebmaker from "./assets/keebmaker.png";
-import keebmakerDarkMode from "./assets/keebmaker-dark-mode.png";
-
-import keebio from "./assets/keebio.avif";
-
 import deskHero from "./assets/deskhero.webp";
 import deskHeroDarkMode from "./assets/deskhero-dark-mode.webp";
-
-import mode from "./assets/mode.png";
-import modeDarkMode from "./assets/mode-dark-mode.png";
-
-import mechlovin from "./assets/mechloving.png";
-import mechlovinDarkMode from "./assets/mechlovin-dark-mode.png";
-
-import phaseByte from "./assets/phasebyte.png";
-
+import keebio from "./assets/keebio.avif";
+import keebmaker from "./assets/keebmaker.png";
+import keebmakerDarkMode from "./assets/keebmaker-dark-mode.png";
 import keycapsss from "./assets/keycapsss.png";
 import keycapsssDarkMode from "./assets/keycapsss-dark-mode.png";
-
+import keychron from "./assets/keychron.png";
+import keychronDarkMode from "./assets/keychron-dark-mode.png";
+import kinesis from "./assets/kinesis.png";
+import kinesisDarkMode from "./assets/kinesis-dark-mode.png";
+import littleKeyboards from "./assets/littlekeyboards.avif";
+import littleKeyboardsDarkMode from "./assets/littlekeyboards-dark-mode.avif";
+import mechlovinDarkMode from "./assets/mechlovin-dark-mode.png";
+import mechlovin from "./assets/mechloving.png";
 import mekibo from "./assets/mekibo.png";
 import mekiboDarkMode from "./assets/mekibo-dark-mode.png";
-
+import mode from "./assets/mode.png";
+import modeDarkMode from "./assets/mode-dark-mode.png";
+import niceAndTyperactive from "./assets/niceandtyperactive.png";
+import niceAndTyperactiveDarkMode from "./assets/niceandtyperactive-dark-mode.png";
+import phaseByte from "./assets/phasebyte.png";
 import splitkb from "./assets/splitkb.png";
 import splitkbDarkMode from "./assets/splitkb-dark-mode.png";
 import { GenericModal } from "./GenericModal";
 import { ExternalLink } from "./misc/ExternalLink";
+import { useModalRef } from "./misc/useModalRef";
 
 export interface AboutModalProps {
   open: boolean;
@@ -230,7 +217,7 @@ export const AboutModal = ({ open, onClose }: AboutModalProps) => {
                   };
 
                   return (
-                    <a key={v.name} href={v.url} target="_blank">
+                    <a key={v.name} href={v.url} target="_blank" rel="noreferrer">
                       <picture aria-label={v.name}>
                         {v.darkModeImg && (
                           <source

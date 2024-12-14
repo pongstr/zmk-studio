@@ -1,4 +1,5 @@
 import { BehaviorParameterValueDescription } from "@zmkfirmware/zmk-studio-ts-client/behaviors";
+
 import { hid_usage_page_and_id_from_usage } from "../hid-usages";
 
 export function validateValue(

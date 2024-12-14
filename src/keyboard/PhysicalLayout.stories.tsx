@@ -1,8 +1,9 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { fn } from "@storybook/test";
-import { PhysicalLayout } from "./PhysicalLayout";
-import { HidUsageLabel } from "./HidUsageLabel";
+
 import { hid_usage_from_page_and_id } from "../hid-usages";
+import { HidUsageLabel } from "./HidUsageLabel";
+import { PhysicalLayout } from "./PhysicalLayout";
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {

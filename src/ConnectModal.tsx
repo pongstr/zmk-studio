@@ -1,28 +1,29 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+/* eslint-disable */
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import type { RpcTransport } from "@zmkfirmware/zmk-studio-ts-client/transport/index";
-import { UserCancelledError } from "@zmkfirmware/zmk-studio-ts-client/transport/errors";
-import type { AvailableDevice } from "./tauri/index";
-import { Bluetooth, RefreshCw } from "lucide-react";
-import { Key, ListBox, ListBoxItem, Selection } from "react-aria-components";
-import { useModalRef } from "./misc/useModalRef";
-import { ExternalLink } from "./misc/ExternalLink";
-import { GenericModal } from "./GenericModal";
+import type { RpcTransport } from '@zmkfirmware/zmk-studio-ts-client/transport/index'
+import { UserCancelledError } from '@zmkfirmware/zmk-studio-ts-client/transport/errors'
+import type { AvailableDevice } from './tauri/index'
+import { Bluetooth, RefreshCw } from 'lucide-react'
+import { Key, ListBox, ListBoxItem, Selection } from 'react-aria-components'
+import { useModalRef } from './misc/useModalRef'
+import { ExternalLink } from './misc/ExternalLink'
+import { GenericModal } from './GenericModal'
 
 export type TransportFactory = {
-  label: string;
-  isWireless?: boolean;
-  connect?: () => Promise<RpcTransport>;
+  label: string
+  isWireless?: boolean
+  connect?: () => Promise<RpcTransport>
   pick_and_connect?: {
-    list: () => Promise<Array<AvailableDevice>>;
-    connect: (dev: AvailableDevice) => Promise<RpcTransport>;
-  };
-};
+    list: () => Promise<Array<AvailableDevice>>
+    connect: (dev: AvailableDevice) => Promise<RpcTransport>
+  }
+}
 
 export interface ConnectModalProps {
-  open?: boolean;
-  transports: TransportFactory[];
-  onTransportCreated: (t: RpcTransport) => void;
+  open?: boolean
+  transports: TransportFactory[]
+  onTransportCreated: (t: RpcTransport) => void
 }
 
 function useDeviceList(
@@ -32,59 +33,59 @@ function useDeviceList(
 ) {
   const [devices, setDevices] = useState<
     Array<[TransportFactory, AvailableDevice]>
-  >([]);
-  const [selectedDev, setSelectedDev] = useState(new Set<Key>());
-  const [refreshing, setRefreshing] = useState(false);
+  >([])
+  const [selectedDev, setSelectedDev] = useState(new Set<Key>())
+  const [refreshing, setRefreshing] = useState(false)
 
   const LoadEm = useCallback(async () => {
-    setRefreshing(true);
-    const entries: Array<[TransportFactory, AvailableDevice]> = [];
+    setRefreshing(true)
+    const entries: Array<[TransportFactory, AvailableDevice]> = []
     for (const t of transports.filter((t) => t.pick_and_connect)) {
-      const devices = await t.pick_and_connect?.list();
+      const devices = await t.pick_and_connect?.list()
       if (!devices) {
-        continue;
+        continue
       }
 
       entries.push(
         ...devices.map<[TransportFactory, AvailableDevice]>((d) => {
-          return [t, d];
+          return [t, d]
         }),
-      );
+      )
     }
 
-    setDevices(entries);
-    setRefreshing(false);
-  }, [transports]);
+    setDevices(entries)
+    setRefreshing(false)
+  }, [transports])
 
   useEffect(() => {
-    setSelectedDev(new Set());
-    setDevices([]);
+    setSelectedDev(new Set())
+    setDevices([])
 
-    LoadEm().then(console.info).catch(console.error);
-  }, [transports, open, setDevices, LoadEm]);
+    LoadEm().then(console.info).catch(console.error)
+  }, [transports, open, setDevices, LoadEm])
 
   const onRefresh = useCallback(() => {
-    setSelectedDev(new Set());
-    setDevices([]);
+    setSelectedDev(new Set())
+    setDevices([])
 
-    LoadEm().then(console.info).catch(console.error);
-  }, [LoadEm]);
+    LoadEm().then(console.info).catch(console.error)
+  }, [LoadEm])
 
   const onSelect = useCallback(
     async (keys: Selection) => {
-      if (keys === "all") {
-        return;
+      if (keys === 'all') {
+        return
       }
-      const dev = devices.find(([_t, d]) => keys.has(d.id));
+      const dev = devices.find(([_t, d]) => keys.has(d.id))
       if (dev) {
         dev[0]
           .pick_and_connect!.connect(dev[1])
           .then(onTransportCreated)
-          .catch((e) => alert(e));
+          .catch((e) => alert(e))
       }
     },
     [devices, onTransportCreated],
-  );
+  )
 
   return (
     <div>
@@ -97,7 +98,7 @@ function useDeviceList(
         >
           <RefreshCw
             className={`size-5 transition-transform ${
-              refreshing ? "animate-spin" : ""
+              refreshing ? 'animate-spin' : ''
             }`}
           />
         </button>
@@ -124,7 +125,7 @@ function useDeviceList(
         )}
       </ListBox>
     </div>
-  );
+  )
 }
 
 function useSimpleDevicePicker(
@@ -133,58 +134,58 @@ function useSimpleDevicePicker(
 ) {
   const [availableDevices, setAvailableDevices] = useState<
     AvailableDevice[] | undefined
-  >(undefined);
+  >(undefined)
   const [selectedTransport, setSelectedTransport] = useState<
     TransportFactory | undefined
-  >(undefined);
+  >(undefined)
 
   useEffect(() => {
     if (!selectedTransport) {
-      setAvailableDevices(undefined);
-      return;
+      setAvailableDevices(undefined)
+      return
     }
 
-    let ignore = false;
+    let ignore = false
 
     async function connectTransport() {
       try {
-        const transport = await selectedTransport?.connect?.();
+        const transport = await selectedTransport?.connect?.()
 
         if (!ignore) {
           if (transport) {
-            onTransportCreated(transport);
+            onTransportCreated(transport)
           }
-          setSelectedTransport(undefined);
+          setSelectedTransport(undefined)
         }
       } catch (e) {
         if (!ignore) {
-          console.error(e);
+          console.error(e)
           if (e instanceof Error && !(e instanceof UserCancelledError)) {
-            alert(e.message);
+            alert(e.message)
           }
-          setSelectedTransport(undefined);
+          setSelectedTransport(undefined)
         }
       }
     }
 
     async function loadAvailableDevices() {
-      const devices = await selectedTransport?.pick_and_connect?.list();
+      const devices = await selectedTransport?.pick_and_connect?.list()
 
       if (!ignore) {
-        setAvailableDevices(devices);
+        setAvailableDevices(devices)
       }
     }
 
     if (selectedTransport.connect) {
-      connectTransport().then(console.info).catch(console.error);
-      return;
+      connectTransport().then(console.info).catch(console.error)
+      return
     }
 
-    loadAvailableDevices().then(console.info).catch(console.error);
+    loadAvailableDevices().then(console.info).catch(console.error)
     return () => {
-      ignore = true;
-    };
-  }, [onTransportCreated, selectedTransport]);
+      ignore = true
+    }
+  }, [onTransportCreated, selectedTransport])
 
   const connections = transports.map((t) => (
     <li key={t.label} className="list-none">
@@ -196,7 +197,7 @@ function useSimpleDevicePicker(
         {t.label}
       </button>
     </li>
-  ));
+  ))
 
   return (
     <div>
@@ -211,8 +212,8 @@ function useSimpleDevicePicker(
               onClick={async () => {
                 onTransportCreated(
                   await selectedTransport!.pick_and_connect!.connect(d),
-                );
-                setSelectedTransport(undefined);
+                )
+                setSelectedTransport(undefined)
               }}
             >
               {d.label}
@@ -221,21 +222,21 @@ function useSimpleDevicePicker(
         </ul>
       )}
     </div>
-  );
+  )
 }
 
 function noTransportsOptionsPrompt() {
   return (
     <div className="m-4 flex flex-col gap-2">
       <p>
-        Your browser is not supported. ZMK Studio uses either{" "}
+        Your browser is not supported. ZMK Studio uses either{' '}
         <ExternalLink href="https://caniuse.com/web-serial">
           Web Serial
-        </ExternalLink>{" "}
-        or{" "}
+        </ExternalLink>{' '}
+        or{' '}
         <ExternalLink href="https://caniuse.com/web-bluetooth">
           Web Bluetooth
-        </ExternalLink>{" "}
+        </ExternalLink>{' '}
         (Linux only) to connect to ZMK devices.
       </p>
 
@@ -247,7 +248,7 @@ function noTransportsOptionsPrompt() {
             Chrome/Edge, or
           </li>
           <li>
-            Download our{" "}
+            Download our{' '}
             <ExternalLink href="https://github.com/zmkfirmware/zmk-studio/releases">
               cross platform application
             </ExternalLink>
@@ -256,7 +257,7 @@ function noTransportsOptionsPrompt() {
         </ul>
       </div>
     </div>
-  );
+  )
 }
 
 function useConnectOptions(
@@ -267,16 +268,16 @@ function useConnectOptions(
   const useSimplePicker = useMemo(
     () => transports.every((t) => !t.pick_and_connect),
     [transports],
-  );
+  )
 
-  const devicePicker = useSimpleDevicePicker(transports, onTransportCreated);
+  const devicePicker = useSimpleDevicePicker(transports, onTransportCreated)
   const deviceList = useDeviceList(
     open || false,
     transports,
     onTransportCreated,
-  );
+  )
 
-  return useSimplePicker ? devicePicker : deviceList;
+  return useSimplePicker ? devicePicker : deviceList
 }
 
 export const ConnectModal = ({
@@ -284,17 +285,15 @@ export const ConnectModal = ({
   transports,
   onTransportCreated,
 }: ConnectModalProps) => {
-  const dialog = useModalRef(open || false, false, false);
-
-  const haveTransports = useMemo(() => transports.length > 0, [transports]);
-
-  const connectOpts = useConnectOptions(transports, onTransportCreated, open);
-  const noTransportOpts = noTransportsOptionsPrompt();
+  const dialog = useModalRef(open || false, false, false)
+  const haveTransports = useMemo(() => transports.length > 0, [transports])
+  const connectOpts = useConnectOptions(transports, onTransportCreated, open)
+  const noTransportOpts = noTransportsOptionsPrompt()
 
   return (
     <GenericModal ref={dialog} className="max-w-xl">
       <h1 className="text-xl">Welcome to ZMK Studio</h1>
       {haveTransports ? connectOpts : noTransportOpts}
     </GenericModal>
-  );
-};
+  )
+}

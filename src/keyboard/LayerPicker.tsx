@@ -1,4 +1,4 @@
-import { Pencil, Minus, Plus } from "lucide-react";
+import { Minus, Pencil, Plus } from "lucide-react";
 import { useCallback, useMemo, useState } from "react";
 import {
   DropIndicator,
@@ -8,8 +8,9 @@ import {
   Selection,
   useDragAndDrop,
 } from "react-aria-components";
-import { useModalRef } from "../misc/useModalRef";
+
 import { GenericModal } from "../GenericModal";
+import { useModalRef } from "../misc/useModalRef";
 
 interface Layer {
   id: number;

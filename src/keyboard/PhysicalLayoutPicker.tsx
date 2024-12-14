@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import {
   Button,
   Key,
@@ -9,8 +10,8 @@ import {
   SelectValue,
   Text,
 } from "react-aria-components";
-import { PhysicalLayout, type KeyPosition } from "./PhysicalLayout";
-import { useCallback } from "react";
+
+import { type KeyPosition,PhysicalLayout } from "./PhysicalLayout";
 
 export interface PhysicalLayoutItem {
   name: string;

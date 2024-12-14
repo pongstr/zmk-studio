@@ -1,36 +1,37 @@
-import { useContext, useMemo } from "react";
+import { LockState } from '@zmkfirmware/zmk-studio-ts-client/core'
+import type { RpcTransport } from '@zmkfirmware/zmk-studio-ts-client/transport/index'
+import { useContext, useMemo } from 'react'
 
-import type { RpcTransport } from "@zmkfirmware/zmk-studio-ts-client/transport/index";
-import type { AvailableDevice } from "./tauri/index";
-import { LockStateContext } from "./rpc/LockStateContext";
-import { LockState } from "@zmkfirmware/zmk-studio-ts-client/core";
-import { ConnectionContext } from "./rpc/ConnectionContext";
-import { useModalRef } from "./misc/useModalRef";
-import { GenericModal } from "./GenericModal";
-import { ExternalLink } from "./misc/ExternalLink";
+import { ConnectionContext } from '@/components/providers/rpc-connect/ConnectionContext.tsx'
+
+import { LockStateContext } from './components/providers/rpc-lock-state/LockStateContext.ts'
+import { GenericModal } from './GenericModal'
+import { ExternalLink } from './misc/ExternalLink'
+import { useModalRef } from './misc/useModalRef'
+import type { AvailableDevice } from './tauri/index'
 
 export type TransportFactory = {
-  label: string;
-  connect?: () => Promise<RpcTransport>;
+  label: string
+  connect?: () => Promise<RpcTransport>
   pick_and_connect?: {
-    list: () => Promise<Array<AvailableDevice>>;
-    connect: (dev: AvailableDevice) => Promise<RpcTransport>;
-  };
-};
+    list: () => Promise<Array<AvailableDevice>>
+    connect: (dev: AvailableDevice) => Promise<RpcTransport>
+  }
+}
 
 export interface UnlockModalProps {}
 
 // eslint-disable-next-line no-empty-pattern
 export const UnlockModal = ({}: UnlockModalProps) => {
-  const conn = useContext(ConnectionContext);
-  const lockState = useContext(LockStateContext);
+  const conn = useContext(ConnectionContext)
+  const lockState = useContext(LockStateContext)
 
   const open = useMemo(
     () =>
       !!conn.conn && lockState != LockState.ZMK_STUDIO_CORE_LOCK_STATE_UNLOCKED,
     [conn, lockState],
-  );
-  const dialog = useModalRef(open, false, false);
+  )
+  const dialog = useModalRef(open, false, false)
 
   return (
     <GenericModal ref={dialog}>
@@ -40,12 +41,12 @@ export const UnlockModal = ({}: UnlockModalProps) => {
         Studio.
       </p>
       <p>
-        If studio unlocking hasn't been added to your keymap or a combo, see the{" "}
+        If studio unlocking hasn't been added to your keymap or a combo, see the{' '}
         <ExternalLink href="https://zmk.dev/docs/keymaps/behaviors/studio-unlock">
           Studio Unlock Behavior
-        </ExternalLink>{" "}
+        </ExternalLink>{' '}
         documentation for more infomation.
       </p>
     </GenericModal>
-  );
-};
+  )
+}

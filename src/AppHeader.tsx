@@ -1,31 +1,33 @@
+import { LockState } from '@zmkfirmware/zmk-studio-ts-client/core'
+import { ChevronDown, Redo2, Save, Trash2, Undo2 } from 'lucide-react'
+import { useContext, useEffect, useState } from 'react'
 import {
   Button,
   Menu,
   MenuItem,
   MenuTrigger,
   Popover,
-} from "react-aria-components";
-import { useConnectedDeviceData } from "./rpc/useConnectedDeviceData";
-import { useSub } from "./usePubSub";
-import { useContext, useEffect, useState } from "react";
-import { useModalRef } from "./misc/useModalRef";
-import { LockStateContext } from "./rpc/LockStateContext";
-import { LockState } from "@zmkfirmware/zmk-studio-ts-client/core";
-import { ConnectionContext } from "./rpc/ConnectionContext";
-import { ChevronDown, Undo2, Redo2, Save, Trash2 } from "lucide-react";
-import { Tooltip } from "./misc/Tooltip";
-import { GenericModal } from "./GenericModal";
+} from 'react-aria-components'
+
+import { ConnectionContext } from '@/components/providers/rpc-connect/ConnectionContext.tsx'
+import { useConnectedDeviceData } from '@/components/providers/rpc-connect/useConnectedDeviceData.ts'
+
+import { LockStateContext } from './components/providers/rpc-lock-state/LockStateContext.ts'
+import { GenericModal } from './GenericModal'
+import { Tooltip } from './misc/Tooltip'
+import { useModalRef } from './misc/useModalRef'
+import { useSub } from './usePubSub'
 
 export interface AppHeaderProps {
-  connectedDeviceLabel?: string;
-  onSave?: () => void | Promise<void>;
-  onDiscard?: () => void | Promise<void>;
-  onUndo?: () => Promise<void>;
-  onRedo?: () => Promise<void>;
-  onResetSettings?: () => void | Promise<void>;
-  onDisconnect?: () => void | Promise<void>;
-  canUndo?: boolean;
-  canRedo?: boolean;
+  connectedDeviceLabel?: string
+  onSave?: () => void | Promise<void>
+  onDiscard?: () => void | Promise<void>
+  onUndo?: () => Promise<void>
+  onRedo?: () => Promise<void>
+  onResetSettings?: () => void | Promise<void>
+  onDisconnect?: () => void | Promise<void>
+  canUndo?: boolean
+  canRedo?: boolean
 }
 
 export const AppHeader = ({
@@ -39,10 +41,10 @@ export const AppHeader = ({
   onDisconnect,
   onResetSettings,
 }: AppHeaderProps) => {
-  const [showSettingsReset, setShowSettingsReset] = useState(false);
+  const [showSettingsReset, setShowSettingsReset] = useState(false)
 
-  const lockState = useContext(LockStateContext);
-  const connectionState = useContext(ConnectionContext);
+  const lockState = useContext(LockStateContext)
+  const connectionState = useContext(ConnectionContext)
 
   useEffect(() => {
     if (
@@ -50,20 +52,20 @@ export const AppHeader = ({
         lockState != LockState.ZMK_STUDIO_CORE_LOCK_STATE_UNLOCKED) &&
       showSettingsReset
     ) {
-      setShowSettingsReset(false);
+      setShowSettingsReset(false)
     }
-  }, [connectionState.conn, lockState, showSettingsReset]);
+  }, [connectionState.conn, lockState, showSettingsReset])
 
-  const showSettingsRef = useModalRef(showSettingsReset);
+  const showSettingsRef = useModalRef(showSettingsReset)
   const [unsaved, setUnsaved] = useConnectedDeviceData<boolean>(
     { keymap: { checkUnsavedChanges: true } },
     (r) => r.keymap?.checkUnsavedChanges,
-  );
+  )
 
   useSub(
-    "rpc_notification.keymap.unsavedChangesStatusChanged",
+    'rpc_notification.keymap.unsavedChangesStatusChanged',
     (unsaved: boolean) => setUnsaved(unsaved),
-  );
+  )
 
   return (
     <header className="inset-x-0 top-0 grid h-10 max-w-full grid-cols-[1fr_auto_1fr] items-center justify-between">
@@ -89,8 +91,8 @@ export const AppHeader = ({
             <Button
               className="rounded bg-base-200 px-3 py-2 hover:bg-base-300"
               onPress={() => {
-                setShowSettingsReset(false);
-                onResetSettings?.();
+                setShowSettingsReset(false)
+                onResetSettings?.()
               }}
             >
               Restore Stock Settings
@@ -167,5 +169,5 @@ export const AppHeader = ({
         </Tooltip>
       </div>
     </header>
-  );
-};
+  )
+}

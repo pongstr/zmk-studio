@@ -1,7 +1,6 @@
-import { useModalRef } from "./useModalRef";
-
 import NOTICE from "../../NOTICE?raw";
 import { GenericModal } from "../GenericModal";
+import { useModalRef } from "./useModalRef";
 
 export interface LicenseNoticeModalProps {
   open: boolean;

@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
-
 import {
-  GetBehaviorDetailsResponse,
   BehaviorBindingParametersSet,
+  GetBehaviorDetailsResponse,
 } from "@zmkfirmware/zmk-studio-ts-client/behaviors";
 import { BehaviorBinding } from "@zmkfirmware/zmk-studio-ts-client/keymap";
+import { useEffect, useMemo, useState } from "react";
+
 import { BehaviorParametersPicker } from "./BehaviorParametersPicker";
 import { validateValue } from "./parameters";
 

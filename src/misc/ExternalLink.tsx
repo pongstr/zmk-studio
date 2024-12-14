@@ -1,9 +1,8 @@
-import { PropsWithChildren } from "react";
-
-import { ExternalLink as LinkIcon } from "lucide-react";
+import { ExternalLink as LinkIcon } from 'lucide-react'
+import { PropsWithChildren } from 'react'
 
 export interface ExternalLinkProps {
-  href: string;
+  href: string
 }
 
 export const ExternalLink = ({
@@ -11,9 +10,13 @@ export const ExternalLink = ({
   children,
 }: PropsWithChildren<ExternalLinkProps>) => {
   return (
-    <a className="text-primary hover:underline" target="_new" href={href}>
+    <a
+      className="inline-flex items-center justify-center gap-1 text-accent hover:underline"
+      target="_new"
+      href={href}
+    >
       {children}
-      <LinkIcon className="mx-1 inline-block w-4 align-text-top" />
+      <LinkIcon className="size-4" />
     </a>
-  );
-};
+  )
+}

@@ -1,48 +1,49 @@
 // import './key.css';
 
-import { PropsWithChildren, Children, CSSProperties, FC } from "react";
-import { cn } from "../utils";
+import { Children, CSSProperties, FC,PropsWithChildren } from 'react'
+
+import { cn } from '@/lib/utils'
 
 interface KeyProps {
   /**
    * Is this the principal call to action on the page?
    */
-  selected?: boolean;
+  selected?: boolean
   /**
    * How large should the button be?
    */
-  width: number;
-  height: number;
+  width: number
+  height: number
 
-  oneU: number;
+  oneU: number
 
-  hoverZoom?: boolean;
+  hoverZoom?: boolean
   /**
    * Button contents
    */
-  header?: string;
+  header?: string
   /**
    * Optional click handler
    */
-  onClick?: () => void;
+  onClick?: () => void
 }
 
 interface KeyDimension {
-  width: number;
-  height: number;
+  width: number
+  height: number
 }
 
 function makeSize(
   { width, height }: KeyDimension,
   oneU: number,
 ): CSSProperties {
-  width *= oneU;
-  height *= oneU;
+  width *= oneU
+  height *= oneU
 
   return {
-    "--zmk-key-center-width": `calc(${width}px - 2px)`,
-    "--zmk-key-center-height": `calc(${height}px - 2px)`,
-  };
+    '--zmk-key-center-width': `calc(${width}px - 2px)`,
+    '--zmk-key-center-height': `calc(${height}px - 2px)`,
+  }
 }
 
 const ChildItem: FC<PropsWithChildren<{ hoverZoom: boolean }>> = ({
@@ -56,8 +57,8 @@ const ChildItem: FC<PropsWithChildren<{ hoverZoom: boolean }>> = ({
     >
       {children}
     </div>
-  );
-};
+  )
+}
 
 export const Key = ({
   selected = false,
@@ -66,13 +67,13 @@ export const Key = ({
   hoverZoom = true,
   ...props
 }: PropsWithChildren<KeyProps>) => {
-  const size = makeSize(props, oneU);
+  const size = makeSize(props, oneU)
 
   return (
     <div
       className={cn(
-        "group justify-content-center group items-center select-none",
-        "transition-transform origin-center data-[zoomer=true]:hover:scale-[2] data-[zoomer=true]:hover:z-20",
+        'group justify-content-center group items-center select-none',
+        'transition-transform origin-center data-[zoomer=true]:hover:scale-[2] data-[zoomer=true]:hover:z-20',
       )}
       data-zoomer={hoverZoom}
       style={size}
@@ -82,9 +83,9 @@ export const Key = ({
         aria-selected={selected}
         data-zoomer={hoverZoom}
         className={cn(
-          oneU > 20 ? "rounded-md" : "rounded",
-          "relative w-[var(--zmk-key-center-width)] h-[var(--zmk-key-center-height)] bg-base-100 border border-transparent",
-          "group-hover:border-[#a6adbb] aria-selected:bg-primary aria-selected:text-primary-content @container",
+          oneU > 20 ? 'rounded-md' : 'rounded',
+          'relative w-[var(--zmk-key-center-width)] h-[var(--zmk-key-center-height)] bg-base-100 border border-transparent',
+          'group-hover:border-[#a6adbb] aria-selected:bg-primary aria-selected:text-primary-content @container',
         )}
       >
         {header && (
@@ -101,5 +102,5 @@ export const Key = ({
           ))}
       </button>
     </div>
-  );
-};
+  )
+}

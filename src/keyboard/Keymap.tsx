@@ -1,15 +1,15 @@
-import {
-  PhysicalLayout,
-  Keymap as KeymapMsg,
-} from "@zmkfirmware/zmk-studio-ts-client/keymap";
 import type { GetBehaviorDetailsResponse } from "@zmkfirmware/zmk-studio-ts-client/behaviors";
+import {
+  Keymap as KeymapMsg,
+  PhysicalLayout,
+} from "@zmkfirmware/zmk-studio-ts-client/keymap";
+import { Dispatch, SetStateAction } from "react";
 
+import { HidUsageLabel } from "./HidUsageLabel";
 import {
   LayoutZoom,
   PhysicalLayout as PhysicalLayoutComp,
 } from "./PhysicalLayout";
-import { HidUsageLabel } from "./HidUsageLabel";
-import { Dispatch, SetStateAction } from "react";
 
 type BehaviorMap = Record<number, GetBehaviorDetailsResponse>;
 

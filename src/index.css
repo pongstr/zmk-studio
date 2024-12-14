@@ -3,79 +3,131 @@
 @tailwind utilities;
 
 @layer base {
-  @font-face {
-    font-family: "Inter";
-    src: url("/Inter.woff2") format("woff2");
-    font-display: fallback;
-  }
+
   :root {
-    --background: 0 0% 100%;
-    --foreground: 240 10% 3.9%;
-    --card: 0 0% 100%;
-    --card-foreground: 240 10% 3.9%;
-    --popover: 0 0% 100%;
-    --popover-foreground: 240 10% 3.9%;
-    --primary: 240 5.9% 10%;
-    --primary-foreground: 0 0% 98%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --muted: 240 4.8% 95.9%;
-    --muted-foreground: 240 3.8% 46.1%;
-    --accent: 240 4.8% 95.9%;
-    --accent-foreground: 240 5.9% 10%;
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
-    --chart-1: 12 76% 61%;
-    --chart-2: 173 58% 39%;
-    --chart-3: 197 37% 24%;
-    --chart-4: 43 74% 66%;
-    --chart-5: 27 87% 67%;
+    --rosewater: 11 59% 67%;
+    --flamingo: 0 60% 67%;
+    --pink: 316 73% 69%;
+    --mauve: 266 85% 58%;
+    --red: 347 87% 44%;
+    --maroon: 355 76% 59%;
+    --peach: 22 99% 52%;
+    --yellow: 35 77% 49%;
+    --green: 109 58% 40%;
+    --teal: 183 74% 35%;
+    --sky: 197 97% 46%;
+    --sapphire: 189 70% 42%;
+    --blue: 220 91% 54%;
+    --lavender: 231 97% 72%;
+    --text: 234 16% 35%;
+    --subtext1: 233 13% 41%;
+    --subtext0: 233 10% 47%;
+    --overlay2: 232 10% 53%;
+    --overlay1: 231 10% 59%;
+    --overlay0: 228 11% 65%;
+    --surface2: 227 12% 71%;
+    --surface1: 225 14% 77%;
+    --surface0: 223 16% 83%;
+    --base: 220 23% 95%;
+    --mantle: 220 22% 92%;
+    --crust: 220 21% 89%;
+    --background: var(--crust);
+    --foreground: var(--text);
+    --card: var(--base);
+    --card-foreground: var(--text);
+    --popover: var(--base);
+    --popover-foreground: var(--text);
+    --primary: var(--pink);
+    --primary-foreground: var(--base);
+    --secondary: var(--surface0);
+    --secondary-foreground: var(--text);
+    --muted: var(--surface0);
+    --muted-foreground: var(--subtext0);
+    --accent: var(--lavender);
+    --accent-foreground: var(--base);
+    --destructive: var(--red);
+    --destructive-foreground: var(--base);
+    --border: var(--base);
+    --input: var(--surface0);
+    --ring: var(--mauve);
     --radius: 0.5rem;
+    --chart-1: var(--maroon);
+    --chart-2: var(--teal);
+    --chart-3: var(--blue);
+    --chart-4: var(--yellow);
+    --chart-5: var(--green);
   }
+
   .dark {
-    --background: 240 10% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 240 10% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 240 10% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 3.7% 15.9%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 240 3.7% 15.9%;
-    --muted-foreground: 240 5% 64.9%;
-    --accent: 240 3.7% 15.9%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 0 0% 98%;
-    --border: 240 3.7% 15.9%;
-    --input: 240 3.7% 15.9%;
-    --ring: 240 4.9% 83.9%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --rosewater: 10 56% 91%;
+    --flamingo: 0 59% 88%;
+    --pink: 316 72% 86%;
+    --mauve: 267 84% 81%;
+    --red: 343 81% 75%;
+    --maroon: 350 65% 77%;
+    --peach: 23 92% 75%;
+    --yellow: 41 86% 83%;
+    --green: 115 54% 76%;
+    --teal: 170 57% 73%;
+    --sky: 189 71% 73%;
+    --sapphire: 199 76% 69%;
+    --blue: 217 92% 76%;
+    --lavender: 232 97% 85%;
+    --text: 226 64% 88%;
+    --subtext1: 227 35% 80%;
+    --subtext0: 228 24% 72%;
+    --overlay2: 228 17% 64%;
+    --overlay1: 230 13% 55%;
+    --overlay0: 231 11% 47%;
+    --surface2: 233 12% 39%;
+    --surface1: 234 13% 31%;
+    --surface0: 237 16% 23%;
+    --base: 240 21% 15%;
+    --mantle: 240 21% 12%;
+    --crust: 240 23% 9%;
+
+    --background: var(--mantle);
+    --foreground: var(--text);
+    --card: var(--base);
+    --card-foreground: var(--text);
+    --popover: var(--base);
+    --popover-foreground: var(--text);
+    --primary: var(--mauve);
+    --primary-foreground: var(--base);
+    --secondary: var(--surface0);
+    --secondary-foreground: var(--text);
+    --muted: var(--base);
+    --muted-foreground: var(--subtext1);
+    --accent: var(--mauve);
+    --accent-foreground: var(--base);
+    --destructive: var(--red);
+    --destructive-foreground: var(--base);
+    --border: var(--surface0);
+    --input: var(--surface0);
+    --ring: var(--mauve);
+    --radius: 0.5rem;
+    --chart-1: var(--maroon);
+    --chart-2: var(--teal);
+    --chart-3: var(--blue);
+    --chart-4: var(--yellow);
+    --chart-5: var(--green);
   }
 }
 
 html {
   color-scheme: light dark;
+  font-family: "Inter", sans-serif;
 }
 
 #root {
-  height: 100%;
-  width: 100%;
+  height: 100vh;
+  width: 100vw;
+
 }
 
 body {
+  overflow: hidden;
   margin: 0;
-  min-width: 320px;
-
   width: 100vw;
   height: 100vh;
 }
