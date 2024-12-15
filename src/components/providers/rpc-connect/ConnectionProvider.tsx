@@ -1,13 +1,6 @@
 import { RpcTransport } from '@zmkfirmware/zmk-studio-ts-client/transport/index'
 import { Unplug } from 'lucide-react'
-import {
-  FC,
-  PropsWithChildren,
-  useCallback,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { FC, PropsWithChildren, useCallback, useRef, useState } from 'react'
 import { toast } from 'sonner'
 
 import { connect } from '@/components/providers/rpc-connect/connect.util.ts'
@@ -56,7 +49,7 @@ export const ConnectionProvider: FC<PropsWithChildren> = ({ children }) => {
   }, [conn.conn])
 
   // eslint-disable-next-line
-  const connectPrompt = useMemo(() => !conn.conn, [conn.conn])
+  //const connectPrompt = useMemo(() => !conn.conn, [conn.conn])
 
   return (
     <ConnectionContext.Provider

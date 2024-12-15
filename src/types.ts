@@ -33,3 +33,18 @@ export type ThemeProviderState = {
   theme: Theme
   setTheme: (theme: Theme) => void
 }
+
+export type SponsorSize = 'large' | 'medium' | 'small'
+
+export type SponsorsType = {
+  level: string
+  size: SponsorSize
+  vendors: SponsorVendorType[]
+}
+
+export type SponsorVendorType = {
+  name: string
+  darkModeImg?: string
+  url: string
+  img: string
+}

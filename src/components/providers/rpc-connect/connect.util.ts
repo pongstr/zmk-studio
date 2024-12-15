@@ -83,13 +83,13 @@ export async function connect(
   listen_for_notifications(conn.notification_readable, signal)
     .then(() => {
       setConnectedDeviceName(undefined)
-      setConn({ conn: null })
+      setConn({ conn: null, transports: [] })
     })
     .catch(() => {
       setConnectedDeviceName(undefined)
-      setConn({ conn: null })
+      setConn({ conn: null, transports: [] })
     })
 
   setConnectedDeviceName(data.name)
-  setConn({ conn })
+  setConn({ conn, transports: [] })
 }
