@@ -1,0 +1,120 @@
+[
+  {
+    "level": "Platinum",
+    "size": "large",
+    "vendors": [
+      {
+        "name": "nice!keyboards / typeractive",
+        "darkModeImg": "/assets/niceandtyperactive-dark-mode.png",
+        "url": "https://typeractive.xyz/",
+        "img": "/assets/niceandtyperactive.png"
+      },
+      {
+        "name": "Kinesis",
+        "darkModeImg": "/assets/kinesis-dark-mode.png",
+        "url": "https://kinesis-ergo.com/",
+        "img": "/assets/kinesis.png"
+      }
+    ]
+  },
+  {
+    "level": "Gold+",
+    "size": "large",
+    "vendors": [
+      {
+        "name": "CannonKeys",
+        "img": "./assets/cannonkeys.png",
+        "darkModeImg": "./assets/cannonkeys-dark-mode.png",
+        "url": "https://cannonkeys.com/"
+      },
+      {
+        "name": "Keychron",
+        "img": "./assets/keychron.png",
+        "darkModeImg": "./assets/keychron-dark-mode.png",
+        "url": "https://keychron.com/"
+      }
+    ]
+  },
+  {
+    "level": "Gold",
+    "size": "medium",
+    "vendors": [
+      {
+        "name": "Little Keyboards",
+        "img": "./assets/littlekeyboards.avif",
+        "darkModeImg": "./assets/littlekeyboards-dark-mode.avif",
+        "url": "https://littlekeyboards.com/"
+      },
+      {
+        "name": "Keebmaker",
+        "img": "./assets/keebmaker.png",
+        "darkModeImg": "./assets/keebmaker-dark-mode.png",
+        "url": "https://keebmaker.com/"
+      }
+    ]
+  },
+  {
+    "level": "Silver",
+    "size": "medium",
+    "vendors": [
+      {
+        "name": "keeb.io",
+        "img": "./assets/keebio.avif",
+        "url": "https://keeb.io/"
+      },
+      {
+        "name": "Mode Designs",
+        "img": "./assets/mode.png",
+        "darkModeImg": "./assets/mode-dark-mode.png",
+        "url": "https://modedesigns.com/"
+      }
+    ]
+  },
+  {
+    "level": "Bronze",
+    "size": "small",
+    "vendors": [
+      {
+        "name": "deskhero",
+        "img": "./assets/deskhero.webp",
+        "darkModeImg": "./assets/deskhero-dark-mode.webp",
+        "url": "https://deskhero.ca/"
+      },
+      {
+        "name": "PhaseByte",
+        "img": "./assets/phasebyte.png",
+        "url": "https://phasebyte.com/"
+      },
+      {
+        "name": "Mechlovin'",
+        "img": "./assets/mechloving.png",
+        "darkModeImg": "./assets/mechlovin-dark-mode.png",
+        "url": "https://mechlovin.studio/"
+      }
+    ]
+  },
+  {
+    "level": "Additional",
+    "size": "small",
+    "vendors": [
+      {
+        "name": "splitkb.com",
+        "img": "./assets/splitkb.png",
+        "darkModeImg": "./assets/splitkb-dark-mode.png",
+        "url": "https://splitkb.com/"
+      },
+      {
+        "name": "keycapsss",
+        "img": "./assets/keycapsss.png",
+        "darkModeImg": "./assets/keycapsss-dark-mode.png",
+        "url": "https://keycapsss.com/"
+      },
+      {
+        "name": "mekibo",
+        "img": "./assets/mekibo.png",
+        "darkModeImg": "./assets/mekibo-dark-mode.png",
+        "url": "https://mekibo.com/"
+      }
+    ]
+  }
+]

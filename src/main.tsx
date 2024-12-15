@@ -11,6 +11,7 @@ import { ThemeProvider } from '@/components/providers/theme/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 import AppPage from '@/pages/app'
 import SettingsPage from '@/pages/settings'
+import SponsorsPage from '@/pages/sponsors'
 import TestPage from '@/pages/test'
 
 import { DialogAbout } from './components/blocks/dialog-about'
@@ -24,6 +25,7 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
           <Header />
           <main className="h-[calc(100vh_-_100px)] w-screen">
             <Switch>
+              <Route path="/sponsors" component={SponsorsPage} />
               <Route path="/settings" component={SettingsPage} />
               <Route path="/test" component={TestPage} />
               <Route path="/" component={AppPage} />

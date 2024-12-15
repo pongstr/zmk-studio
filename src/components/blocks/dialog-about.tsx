@@ -10,7 +10,7 @@ import {
 import { ZmkStudio } from '@/components/ui/zmk-studio'
 import { useToggleModal } from '@/hooks/useToggleModal'
 import { cn } from '@/lib/utils'
-import { SponsorsType } from '@/types'
+import { SponsorsType, SponsorVendorType } from '@/types'
 
 //import cannonKeys from './assets/cannonkeys.png'
 //import cannonKeysDarkMode from './assets/cannonkeys-dark-mode.png'
@@ -39,6 +39,13 @@ import { SponsorsType } from '@/types'
 //import splitkb from './assets/splitkb.png'
 //import splitkbDarkMode from './assets/splitkb-dark-mode.png'
 //
+//
+const vendor = {
+  name: 'nice!keyboards / typeractive',
+  darkModeImg: '/assets/niceandtyperactive-dark-mode.png',
+  url: 'https://typeractive.xyz/',
+  img: '/assets/niceandtyperactive.png',
+}
 const sponsors: Array<SponsorsType> = [
   {
     level: 'Platinum',
@@ -161,7 +168,7 @@ const sponsors: Array<SponsorsType> = [
 ]
 
 type SponsorLevelProps = {
-  label: string
+  vendors: Array<SponsorVendorType>
   level:
     | 'platinum'
     | 'gold+'
@@ -172,13 +179,13 @@ type SponsorLevelProps = {
     | 'additional'
 }
 
-const SponsorLevel: FC<SponsorLevelProps> = ({ label, level }) => {
+const SponsorLevel: FC<SponsorLevelProps> = ({ level, vendors = [] }) => {
   const levels = {
-    platinum: 'grid-cols-2',
-    'gold+': 'grid-cols-3',
-    gold: 'grid-cols-3',
-    silver: 'grid-cols-4',
-    bronze: 'grid-cols-5',
+    platinum: 'basis-1/2',
+    'gold+': 'basis-1/3',
+    gold: 'basis-1/4',
+    silver: 'basi-1/5',
+    bronze: 'grid-cols-6',
     additional: 'grid-cols-6',
   }
 
@@ -186,18 +193,26 @@ const SponsorLevel: FC<SponsorLevelProps> = ({ label, level }) => {
     <div className="space-y-2">
       <h3 className="rounded-lg border bg-muted/30 p-1 text-center">
         <span className="text-xs font-semibold uppercase opacity-50">
-          {label}
+          {level}
         </span>
       </h3>
 
-      <div className={cn('grid grid-flow-row gap-2', levels[level])}>
-        <a className="flex h-32 items-center justify-center rounded-lg border bg-muted/30 p-1 text-center">
-          vendor
-        </a>
-
-        <a className="flex h-32 items-center justify-center rounded-lg border bg-muted/30 p-1 text-center">
-          vendor
-        </a>
+      <div
+        className={cn(
+          'flex flex-row flex-nowrap justify-center items-start gap-2',
+        )}
+      >
+        {vendors.map((vendor, index) => (
+          <a
+            key={index}
+            className={cn(
+              'flex h-32 items-center justify-center rounded-lg border bg-muted/30 p-1 text-center',
+              levels[level],
+            )}
+          >
+            {vendor.name}
+          </a>
+        ))}
       </div>
     </div>
   )
@@ -250,7 +265,7 @@ export const DialogAbout: FC = () => {
             </span>
           </DialogDescription>
         </DialogHeader>
-        <div className="mx-auto max-w-4xl space-y-8 px-4 pt-4">
+        <div className="mx-auto max-w-4xl px-4 pt-4">
           <p className="mx-auto max-w-screen-sm text-center text-sm leading-relaxed">
             ZMK Studio is made possible thanks to the generous donation of time
             from our contributors, as well as the financial sponsorship from the
@@ -258,7 +273,28 @@ export const DialogAbout: FC = () => {
           </p>
         </div>
 
-        <SponsorLevel label="Platinum" level="platinum" />
+        <div className="w-full space-y-2">
+          <SponsorLevel
+            level="platinum"
+            vendors={Array.from([0, 0]).map(() => ({ ...vendor }))}
+          />
+          <SponsorLevel
+            level="gold+"
+            vendors={Array.from([0, 0, 0]).map(() => ({ ...vendor }))}
+          />
+          <SponsorLevel
+            level="gold"
+            vendors={Array.from([0, 0, 0, 0]).map(() => ({ ...vendor }))}
+          />
+          <SponsorLevel
+            level="silver"
+            vendors={Array.from([0, 0, 0, 0, 0]).map(() => ({ ...vendor }))}
+          />
+          <SponsorLevel
+            level="bronze"
+            vendors={Array.from([0, 0, 0, 0, 0, 0]).map(() => ({ ...vendor }))}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   )
