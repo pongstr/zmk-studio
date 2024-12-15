@@ -1,4 +1,3 @@
-import { RpcTransport } from '@zmkfirmware/zmk-studio-ts-client/transport/index'
 import { ExternalLink } from 'lucide-react'
 import { FC, useMemo } from 'react'
 

@@ -41,7 +41,8 @@ export const UnlockModal = ({}: UnlockModalProps) => {
         Studio.
       </p>
       <p>
-        If studio unlocking hasn't been added to your keymap or a combo, see the{' '}
+        If studio unlocking hasn&apos;t been added to your keymap or a combo,
+        see the{' '}
         <ExternalLink href="https://zmk.dev/docs/keymaps/behaviors/studio-unlock">
           Studio Unlock Behavior
         </ExternalLink>{' '}

@@ -1,4 +1,4 @@
-import { FC } from 'react'
+import { FC, useEffect, useState } from 'react'
 
 import {
   Dialog,
@@ -9,220 +9,27 @@ import {
 } from '@/components/ui/dialog'
 import { ZmkStudio } from '@/components/ui/zmk-studio'
 import { useToggleModal } from '@/hooks/useToggleModal'
-import { cn } from '@/lib/utils'
-import { SponsorsType, SponsorVendorType } from '@/types'
-
-//import cannonKeys from './assets/cannonkeys.png'
-//import cannonKeysDarkMode from './assets/cannonkeys-dark-mode.png'
-//import deskHero from './assets/deskhero.webp'
-//import deskHeroDarkMode from './assets/deskhero-dark-mode.webp'
-//import keebio from './assets/keebio.avif'
-//import keebmaker from './assets/keebmaker.png'
-//import keebmakerDarkMode from './assets/keebmaker-dark-mode.png'
-//import keycapsss from './assets/keycapsss.png'
-//import keycapsssDarkMode from './assets/keycapsss-dark-mode.png'
-//import keychron from './assets/keychron.png'
-//import keychronDarkMode from './assets/keychron-dark-mode.png'
-//import kinesis from './assets/kinesis.png'
-//import kinesisDarkMode from './assets/kinesis-dark-mode.png'
-//import littleKeyboards from './assets/littlekeyboards.avif'
-//import littleKeyboardsDarkMode from './assets/littlekeyboards-dark-mode.avif'
-//import mechlovinDarkMode from './assets/mechlovin-dark-mode.png'
-//import mechlovin from './assets/mechloving.png'
-//import mekibo from './assets/mekibo.png'
-//import mekiboDarkMode from './assets/mekibo-dark-mode.png'
-//import mode from './assets/mode.png'
-//import modeDarkMode from './assets/mode-dark-mode.png'
-//import niceAndTyperactive from './assets/niceandtyperactive.png'
-//import niceAndTyperactiveDarkMode from './assets/niceandtyperactive-dark-mode.png'
-//import phaseByte from './assets/phasebyte.png'
-//import splitkb from './assets/splitkb.png'
-//import splitkbDarkMode from './assets/splitkb-dark-mode.png'
-//
-//
-const vendor = {
-  name: 'nice!keyboards / typeractive',
-  darkModeImg: '/assets/niceandtyperactive-dark-mode.png',
-  url: 'https://typeractive.xyz/',
-  img: '/assets/niceandtyperactive.png',
-}
-const sponsors: Array<SponsorsType> = [
-  {
-    level: 'Platinum',
-    size: 'large',
-    vendors: [
-      {
-        name: 'nice!keyboards / typeractive',
-        darkModeImg: '/assets/niceandtyperactive-dark-mode.png',
-        url: 'https://typeractive.xyz/',
-        img: '/assets/niceandtyperactive.png',
-      },
-      {
-        name: 'Kinesis',
-        darkModeImg: '/assets/kinesis-dark-mode.png',
-        url: 'https://kinesis-ergo.com/',
-        img: '/assets/kinesis.png',
-      },
-    ],
-  },
-  //{
-  //  level: 'Gold+',
-  //  size: 'large',
-  //  vendors: [
-  //    {
-  //      name: 'CannonKeys',
-  //      img: cannonKeys,
-  //      darkModeImg: cannonKeysDarkMode,
-  //      url: 'https://cannonkeys.com/',
-  //    },
-  //    {
-  //      name: 'Keychron',
-  //      img: keychron,
-  //      darkModeImg: keychronDarkMode,
-  //      url: 'https://keychron.com/',
-  //    },
-  //  ],
-  //},
-  //{
-  //  level: 'Gold',
-  //  size: 'medium',
-  //  vendors: [
-  //    {
-  //      name: 'Little Keyboards',
-  //      img: littleKeyboards,
-  //      darkModeImg: littleKeyboardsDarkMode,
-  //      url: 'https://littlekeyboards.com/',
-  //    },
-  //    {
-  //      name: 'Keebmaker',
-  //      img: keebmaker,
-  //      darkModeImg: keebmakerDarkMode,
-  //      url: 'https://keebmaker.com/',
-  //    },
-  //  ],
-  //},
-  //{
-  //  level: 'Silver',
-  //  size: 'medium',
-  //  vendors: [
-  //    {
-  //      name: 'keeb.io',
-  //      img: keebio,
-  //      url: 'https://keeb.io/',
-  //    },
-  //    {
-  //      name: 'Mode Designs',
-  //      img: mode,
-  //      darkModeImg: modeDarkMode,
-  //      url: 'https://modedesigns.com/',
-  //    },
-  //  ],
-  //},
-  //{
-  //  level: 'Bronze',
-  //  size: 'small',
-  //  vendors: [
-  //    {
-  //      name: 'deskhero',
-  //      img: deskHero,
-  //      darkModeImg: deskHeroDarkMode,
-  //      url: 'https://deskhero.ca/',
-  //    },
-  //    {
-  //      name: 'PhaseByte',
-  //      img: phaseByte,
-  //      url: 'https://phasebyte.com/',
-  //    },
-  //    {
-  //      name: "Mechlovin'",
-  //      img: mechlovin,
-  //      darkModeImg: mechlovinDarkMode,
-  //      url: 'https://mechlovin.studio/',
-  //    },
-  //  ],
-  //},
-  //{
-  //  level: 'Additional',
-  //  size: 'small',
-  //  vendors: [
-  //    {
-  //      name: 'splitkb.com',
-  //      img: splitkb,
-  //      darkModeImg: splitkbDarkMode,
-  //      url: 'https://splitkb.com/',
-  //    },
-  //    {
-  //      name: 'keycapsss',
-  //      img: keycapsss,
-  //      darkModeImg: keycapsssDarkMode,
-  //      url: 'https://keycapsss.com/',
-  //    },
-  //    {
-  //      name: 'mekibo',
-  //      img: mekibo,
-  //      darkModeImg: mekiboDarkMode,
-  //      url: 'https://mekibo.com/',
-  //    },
-  //  ],
-  //},
-]
-
-type SponsorLevelProps = {
-  vendors: Array<SponsorVendorType>
-  level:
-    | 'platinum'
-    | 'gold+'
-    | 'gold'
-    | 'gold'
-    | 'silver'
-    | 'bronze'
-    | 'additional'
-}
-
-const SponsorLevel: FC<SponsorLevelProps> = ({ level, vendors = [] }) => {
-  const levels = {
-    platinum: 'basis-1/2',
-    'gold+': 'basis-1/3',
-    gold: 'basis-1/4',
-    silver: 'basi-1/5',
-    bronze: 'grid-cols-6',
-    additional: 'grid-cols-6',
-  }
-
-  return (
-    <div className="space-y-2">
-      <h3 className="rounded-lg border bg-muted/30 p-1 text-center">
-        <span className="text-xs font-semibold uppercase opacity-50">
-          {level}
-        </span>
-      </h3>
-
-      <div
-        className={cn(
-          'flex flex-row flex-nowrap justify-center items-start gap-2',
-        )}
-      >
-        {vendors.map((vendor, index) => (
-          <a
-            key={index}
-            className={cn(
-              'flex h-32 items-center justify-center rounded-lg border bg-muted/30 p-1 text-center',
-              levels[level],
-            )}
-          >
-            {vendor.name}
-          </a>
-        ))}
-      </div>
-    </div>
-  )
-}
+import type { SponsorsType } from '@/types'
 
 export const DialogAbout: FC = () => {
+  const [sponsors, setSponsors] = useState<Array<SponsorsType>>([])
+
   const { isOpen, handleOnOpenChange } = useToggleModal(
     'dialog',
     'dialog:about',
   )
+
+  useEffect(() => {
+    if (sponsors.length !== 0) return
+
+    fetch('/data/sponsors.json', {
+      method: 'get',
+      mode: 'same-origin',
+    })
+      .then((res) => res.json() as Promise<Array<SponsorsType>>)
+      .then(setSponsors)
+      .catch(console.error)
+  }, [sponsors])
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOnOpenChange}>
@@ -273,28 +80,7 @@ export const DialogAbout: FC = () => {
           </p>
         </div>
 
-        <div className="w-full space-y-2">
-          <SponsorLevel
-            level="platinum"
-            vendors={Array.from([0, 0]).map(() => ({ ...vendor }))}
-          />
-          <SponsorLevel
-            level="gold+"
-            vendors={Array.from([0, 0, 0]).map(() => ({ ...vendor }))}
-          />
-          <SponsorLevel
-            level="gold"
-            vendors={Array.from([0, 0, 0, 0]).map(() => ({ ...vendor }))}
-          />
-          <SponsorLevel
-            level="silver"
-            vendors={Array.from([0, 0, 0, 0, 0]).map(() => ({ ...vendor }))}
-          />
-          <SponsorLevel
-            level="bronze"
-            vendors={Array.from([0, 0, 0, 0, 0, 0]).map(() => ({ ...vendor }))}
-          />
-        </div>
+        <div className="w-full space-y-2"></div>
       </DialogContent>
     </Dialog>
   )

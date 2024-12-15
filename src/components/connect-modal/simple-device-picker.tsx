@@ -10,7 +10,7 @@ export const SimpleDevicePicker: FC = () => {
   const { transports, onConnect: onTransportCreated } = useConnectionContext()
 
   const { selectedTransport, setSelectedTransport, availableDevices } =
-    useSimpleDevicePicker(onTransportCreated)
+    useSimpleDevicePicker()
 
   return (
     <div className="space-y-4">

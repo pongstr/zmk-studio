@@ -6,6 +6,7 @@ import type { Notification } from '@zmkfirmware/zmk-studio-ts-client/studio'
 import { RpcTransport } from '@zmkfirmware/zmk-studio-ts-client/transport/index'
 import { Dispatch } from 'react'
 
+import { TRANSPORTS } from '@/lib/transports'
 import { valueAfter } from '@/misc/async.ts'
 import { ConnectionState } from '@/types.ts'
 import { emitter } from '@/usePubSub.ts'
@@ -21,7 +22,6 @@ export async function listen_for_notifications(
   }
 
   signal.addEventListener('abort', onAbort, { once: true })
-
   do {
     try {
       const { done, value } = await reader.read()
@@ -58,7 +58,7 @@ export async function listen_for_notifications(
 
 export async function connect(
   transport: RpcTransport,
-  setConn: Dispatch<ConnectionState>,
+  setConn: Dispatch<Partial<ConnectionState>>,
   setConnectedDeviceName: Dispatch<string | undefined>,
   signal: AbortSignal,
 ) {
@@ -83,13 +83,14 @@ export async function connect(
   listen_for_notifications(conn.notification_readable, signal)
     .then(() => {
       setConnectedDeviceName(undefined)
-      setConn({ conn: null, transports: [] })
+
+      setConn({ conn: null, transports: TRANSPORTS, isOpen: true })
     })
     .catch(() => {
       setConnectedDeviceName(undefined)
-      setConn({ conn: null, transports: [] })
+      setConn({ conn: null, transports: TRANSPORTS, isOpen: true })
     })
 
   setConnectedDeviceName(data.name)
-  setConn({ conn, transports: [] })
+  setConn((prev) => ({ ...prev, conn }) as ConnectionState)
 }

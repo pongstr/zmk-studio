@@ -1,13 +1,13 @@
 import { UserCancelledError } from '@zmkfirmware/zmk-studio-ts-client/transport/errors'
-import { RpcTransport } from '@zmkfirmware/zmk-studio-ts-client/transport/index'
 import { useEffect, useState } from 'react'
+import { toast } from 'sonner'
 
+import { useConnectionContext } from '@/components/providers/rpc-connect/useConnectionContext'
 import { AvailableDevice } from '@/tauri'
 import type { TransportFactory } from '@/types'
 
-export function useSimpleDevicePicker(
-  onTransportCreated: (t: RpcTransport) => void,
-) {
+export function useSimpleDevicePicker() {
+  const { onConnect: onTransportCreated } = useConnectionContext()
   const [availableDevices, setAvailableDevices] = useState<
     AvailableDevice[] | undefined
   >(undefined)
@@ -37,7 +37,11 @@ export function useSimpleDevicePicker(
         if (!ignore) {
           console.error(e)
           if (e instanceof Error && !(e instanceof UserCancelledError)) {
-            alert(e.message)
+            toast('Connection Cancelled', {
+              description: 'Select your device from the list to connect.',
+              duration: 5000,
+            })
+            //alert(e.message)
           }
           setSelectedTransport(undefined)
         }
