@@ -1,27 +1,22 @@
-import { RpcTransport } from '@zmkfirmware/zmk-studio-ts-client/transport/index'
 import { Bluetooth, RefreshCcw } from 'lucide-react'
 import type { FC } from 'react'
 import { ListBox, ListBoxItem } from 'react-aria-components'
 
+import { useConnectionContext } from '@/components/providers/rpc-connect/useConnectionContext'
 import { Button } from '@/components/ui/button'
 import { UsbIcon } from '@/components/ui/icon'
 import { useDeviceList } from '@/hooks/useDeviceList'
 import { cn } from '@/lib/utils'
-import { TransportFactory } from '@/types'
 
-type DeviceListProps = {
-  open: boolean
-  transports: Array<TransportFactory>
-  onTransportCreated: (t: RpcTransport) => void
-}
+export const DeviceList: FC = () => {
+  const {
+    isOpen,
+    transports,
+    onConnect: onTransportCreated,
+  } = useConnectionContext()
 
-export const DeviceList: FC<DeviceListProps> = ({
-  open,
-  transports,
-  onTransportCreated,
-}) => {
   const { devices, onRefresh, onSelect, refreshing, selectedDev } =
-    useDeviceList(open, transports, onTransportCreated)
+    useDeviceList(isOpen, transports, onTransportCreated)
 
   return (
     <div className="w-full space-y-4">

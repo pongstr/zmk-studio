@@ -1,27 +1,21 @@
-import { RpcTransport } from '@zmkfirmware/zmk-studio-ts-client/transport/index'
 import { FC } from 'react'
 
+import { useConnectionContext } from '@/components/providers/rpc-connect/useConnectionContext'
 import { Button } from '@/components/ui/button'
 import { BluetoothIcon, UsbIcon } from '@/components/ui/icon'
 import { useSimpleDevicePicker } from '@/hooks/useSimpleDevicePicker'
-import type { TransportFactory } from '@/types'
+import { TransportFactory } from '@/types'
 
-type SimpleDevicePickerProps = {
-  transports: TransportFactory[]
-  onTransportCreated: (t: RpcTransport) => void
-}
+export const SimpleDevicePicker: FC = () => {
+  const { transports, onConnect: onTransportCreated } = useConnectionContext()
 
-export const SimpleDevicePicker: FC<SimpleDevicePickerProps> = ({
-  transports,
-  onTransportCreated,
-}) => {
   const { selectedTransport, setSelectedTransport, availableDevices } =
     useSimpleDevicePicker(onTransportCreated)
 
   return (
     <div className="space-y-4">
       <div className="flex items-start justify-start gap-2">
-        {transports.map((transport) => (
+        {transports.map((transport: TransportFactory) => (
           <Button
             type="button"
             variant="secondary"

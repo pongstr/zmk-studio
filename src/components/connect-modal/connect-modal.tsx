@@ -14,23 +14,20 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog'
 import { ZmkStudio } from '@/components/ui/zmk-studio'
-import type { TransportFactory } from '@/types'
 
-type ConnectModalProps = {
-  open: boolean
-  transports: Array<TransportFactory>
-  onTransportCreated: (t: RpcTransport) => void
-}
+import { useConnectionContext } from '../providers/rpc-connect/useConnectionContext'
 
-const SetupDevicePicker: FC<ConnectModalProps> = (props) => {
+const SetupDevicePicker: FC = () => {
+  const { transports } = useConnectionContext()
+
   const simpleMode = useMemo(
-    () => props.transports.every((t) => !t.pick_and_connect),
-    [props.transports],
+    () => transports.every((t) => !t.pick_and_connect),
+    [transports],
   )
 
-  if (simpleMode) return <SimpleDevicePicker {...props} />
+  if (simpleMode) return <SimpleDevicePicker />
 
-  return <DeviceList {...props} />
+  return <DeviceList />
 }
 
 const NoTransportOptions: FC = () => {
@@ -68,14 +65,16 @@ const NoTransportOptions: FC = () => {
   )
 }
 
-export const ConnectModal: FC<ConnectModalProps> = (props) => {
+export const ConnectModal: FC = () => {
+  const { isOpen, transports } = useConnectionContext()
+
   const hasTransports = useMemo(
-    (): boolean => props.transports.length > 0,
-    [props.transports],
+    (): boolean => transports.length > 0,
+    [transports],
   )
 
   return (
-    <Dialog open={props.open}>
+    <Dialog open={isOpen}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="flex items-center justify-center">
@@ -89,7 +88,7 @@ export const ConnectModal: FC<ConnectModalProps> = (props) => {
           </DialogDescription>
         </DialogHeader>
         <div className="flex min-h-48 items-center justify-center py-4">
-          {hasTransports && <SetupDevicePicker {...props} />}
+          {hasTransports && <SetupDevicePicker />}
           {!hasTransports && <NoTransportOptions />}
         </div>
         <DialogFooter>

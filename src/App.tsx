@@ -1,17 +1,12 @@
 import { DialogAbout } from '@/components/blocks/dialog-about.tsx'
 import { DialogLicense } from '@/components/blocks/dialog-license.tsx'
-import { Header } from '@/components/blocks/header/header'
-import { ZmkStudioFooter } from '@/components/blocks/zmk-studio-footer.tsx'
 import { LockStateProvider } from '@/components/providers/rpc-lock-state/LockStateProvider.tsx'
 
 function App() {
   return (
     <>
       <LockStateProvider>
-        <Header />
-        <main className="h-[calc(100vh_-_100px)] w-screen">
-          test
-          {/*
+        {/*
         <UndoRedoContext.Provider value={doIt}>
           <AboutModal open={showAbout} onClose={() => setShowAbout(false)} />
           <LicenseNoticeModal
@@ -38,8 +33,6 @@ function App() {
           </div>
         </UndoRedoContext.Provider>
             */}
-        </main>
-        <ZmkStudioFooter />
       </LockStateProvider>
       <DialogAbout />
       <DialogLicense />

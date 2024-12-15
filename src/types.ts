@@ -10,11 +10,12 @@ declare global {
 }
 
 export type ConnectionState = {
+  isOpen: boolean
   conn: RpcConnection | null
   transports: Array<TransportFactory>
   deviceName?: string
-  disconnect?: () => void
-  onConnect?: (t: RpcTransport) => void
+  disconnect: () => void
+  onConnect: (t: RpcTransport) => void
 }
 
 export type TransportFactory = {

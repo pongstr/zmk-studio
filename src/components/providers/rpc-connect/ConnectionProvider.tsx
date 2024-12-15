@@ -1,8 +1,16 @@
 import { RpcTransport } from '@zmkfirmware/zmk-studio-ts-client/transport/index'
 import { Unplug } from 'lucide-react'
-import { FC, PropsWithChildren, useCallback, useRef, useState } from 'react'
+import {
+  FC,
+  PropsWithChildren,
+  useCallback,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { toast } from 'sonner'
 
+import { ConnectModal } from '@/components/connect-modal/connect-modal.tsx'
 import { connect } from '@/components/providers/rpc-connect/connect.util.ts'
 import { TRANSPORTS } from '@/lib/transports.ts'
 import type { ConnectionState } from '@/types.ts'
@@ -20,14 +28,17 @@ export const ConnectionProvider: FC<PropsWithChildren> = ({ children }) => {
   const abort = useRef<AbortController | null>(null)
 
   const [conn, setConn] = useState<ConnectionState>({
+    isOpen: false,
     conn: null,
     transports: [],
+    onConnect: () => {},
+    disconnect: () => {},
   })
+
   const [deviceName, setConnectedDeviceName] = useState<string | undefined>(
     undefined,
   )
 
-  // eslint-disable-next-line
   const onConnect = useCallback(
     (transport: RpcTransport) => {
       abort.current = new AbortController()
@@ -48,24 +59,20 @@ export const ConnectionProvider: FC<PropsWithChildren> = ({ children }) => {
       .catch(console.error)
   }, [conn.conn])
 
-  // eslint-disable-next-line
-  //const connectPrompt = useMemo(() => !conn.conn, [conn.conn])
+  const isOpen = useMemo(() => !conn.conn, [conn.conn])
 
   return (
     <ConnectionContext.Provider
       value={{
-        conn: conn.conn,
-        disconnect,
-        deviceName,
+        isOpen,
         onConnect,
+        deviceName,
+        disconnect,
+        conn: conn.conn,
         transports: TRANSPORTS,
       }}
     >
-      {/*<ConnectModal
-        open={connectPrompt}
-        transports={TRANSPORTS}
-        onTransportCreated={onConnect}
-      />*/}
+      <ConnectModal />
       {children}
     </ConnectionContext.Provider>
   )

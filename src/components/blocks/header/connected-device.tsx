@@ -1,10 +1,7 @@
-import { FlaskConical, History, Keyboard, Settings, Unplug } from 'lucide-react'
+import { History, Keyboard, Unplug } from 'lucide-react'
 import { FC } from 'react'
-import { Link } from 'wouter'
 
 import { useConnectionContext } from '@/components/providers/rpc-connect/useConnectionContext.tsx'
-import { buttonVariants } from '@/components/ui/button'
-import { ButtonWithToolTip } from '@/components/ui/button-with-tooltip'
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,46 +14,14 @@ import { cn } from '@/lib/utils'
 export const ConnectedDevice: FC = () => {
   const { deviceName, conn, disconnect } = useConnectionContext()
 
-  //className="inline-block rounded-lg p-2 transition-colors hover:bg-muted hover:text-accent"
-  if (!deviceName) {
-    return (
-      <div className="flex items-center justify-center gap-0.5">
-        <ButtonWithToolTip text="Configure">
-          <Link
-            to="/"
-            className={buttonVariants({ variant: 'ghost', size: 'icon' })}
-          >
-            <Keyboard className="size-5" />
-          </Link>
-        </ButtonWithToolTip>
-
-        <ButtonWithToolTip text="Key Tester">
-          <Link
-            to="/test"
-            className={buttonVariants({ variant: 'ghost', size: 'icon' })}
-          >
-            <FlaskConical className="size-5" />
-          </Link>
-        </ButtonWithToolTip>
-
-        <ButtonWithToolTip text="ZMK Studio Settings">
-          <Link
-            to="/settings"
-            className={buttonVariants({ variant: 'ghost', size: 'icon' })}
-          >
-            <Settings className="size-5" />
-          </Link>
-        </ButtonWithToolTip>
-      </div>
-    )
-  }
+  if (!deviceName) return null
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         className={cn(
           'flex items-center justify-end gap-x-2.5 rounded-md border px-2 py-1',
-          !deviceName ? 'text-muted-foreground/35' : 'text-secondary',
+          !deviceName ? 'text-muted-foreground/35' : 'text-foreground',
         )}
       >
         <span className="text-xs uppercase">
