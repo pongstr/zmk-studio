@@ -1,5 +1,6 @@
 import type { RpcConnection } from '@zmkfirmware/zmk-studio-ts-client/index'
 import type { RpcTransport } from '@zmkfirmware/zmk-studio-ts-client/transport/index'
+import { Dispatch, SetStateAction } from 'react'
 
 import type { AvailableDevice } from '@/tauri'
 
@@ -48,4 +49,15 @@ export type SponsorVendorType = {
   darkModeImg?: string
   url: string
   img: string
+}
+
+export type Layer = {
+  id: number
+  name?: string
+}
+
+export type KeyboardContextType = {
+  layers: Array<Layer>
+  selectedLayer: number
+  setSelectedLayer: Dispatch<SetStateAction<number>>
 }
