@@ -1,12 +1,11 @@
-import { LockStateProvider } from '@/components/providers/rpc-lock-state/LockStateProvider'
-
-import Keyboard from './keyboard/Keyboard'
+import { EditHistoryProvider } from '@/components/providers/edit-history/EditHistoryProvider'
+import Keyboard from '@/keyboard/Keyboard'
 
 function App() {
   return (
-    <LockStateProvider>
+    <EditHistoryProvider>
       <Keyboard />
-    </LockStateProvider>
+    </EditHistoryProvider>
   )
 }
 

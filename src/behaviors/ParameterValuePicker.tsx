@@ -1,12 +1,12 @@
-import { BehaviorParameterValueDescription } from "@zmkfirmware/zmk-studio-ts-client/behaviors";
+import { BehaviorParameterValueDescription } from '@zmkfirmware/zmk-studio-ts-client/behaviors'
 
-import { HidUsagePicker } from "./HidUsagePicker";
+import { HidUsagePicker } from './HidUsagePicker'
 
 export interface ParameterValuePickerProps {
-  value?: number;
-  values: BehaviorParameterValueDescription[];
-  layers: { id: number; name: string }[];
-  onValueChanged: (value?: number) => void;
+  value?: number
+  values: BehaviorParameterValueDescription[]
+  layers: { id: number; name: string }[]
+  onValueChanged: (value?: number) => void
 }
 
 export const ParameterValuePicker = ({
@@ -16,7 +16,7 @@ export const ParameterValuePicker = ({
   onValueChanged,
 }: ParameterValuePickerProps) => {
   if (values.length == 0) {
-    return <></>;
+    return <></>
   } else if (values.every((v) => v.constant !== undefined)) {
     return (
       <div>
@@ -26,11 +26,13 @@ export const ParameterValuePicker = ({
           onChange={(e) => onValueChanged(parseInt(e.target.value))}
         >
           {values.map((v) => (
-            <option value={v.constant}>{v.name}</option>
+            <option key={v.name} value={v.constant}>
+              {v.name}
+            </option>
           ))}
         </select>
       </div>
-    );
+    )
   } else if (values.length == 1) {
     if (values[0].range) {
       return (
@@ -44,7 +46,7 @@ export const ParameterValuePicker = ({
             onChange={(e) => onValueChanged(parseInt(e.target.value))}
           />
         </div>
-      );
+      )
     } else if (values[0].hidUsage) {
       return (
         <HidUsagePicker
@@ -56,7 +58,7 @@ export const ParameterValuePicker = ({
             { id: 12, max: values[0].hidUsage.consumerMax },
           ]}
         />
-      );
+      )
     } else if (values[0].layerId) {
       return (
         <div>
@@ -67,20 +69,22 @@ export const ParameterValuePicker = ({
             onChange={(e) => onValueChanged(parseInt(e.target.value))}
           >
             {layers.map(({ name, id }) => (
-              <option value={id}>{name}</option>
+              <option key={id} value={id}>
+                {name}
+              </option>
             ))}
           </select>
         </div>
-      );
+      )
     }
   } else {
-    console.log("Not sure how to handle", values);
+    console.log('Not sure how to handle', values)
     return (
       <>
         <p>Some composite?</p>
       </>
-    );
+    )
   }
 
-  return <></>;
-};
+  return <></>
+}

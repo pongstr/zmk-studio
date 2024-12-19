@@ -1,165 +1,29 @@
-import { Request } from '@zmkfirmware/zmk-studio-ts-client'
-import type { GetBehaviorDetailsResponse } from '@zmkfirmware/zmk-studio-ts-client/behaviors'
-import { LockState } from '@zmkfirmware/zmk-studio-ts-client/core'
 import {
   BehaviorBinding,
   Keymap,
   Layer,
-  PhysicalLayout,
   SetLayerBindingResponse,
   SetLayerPropsResponse,
 } from '@zmkfirmware/zmk-studio-ts-client/keymap'
 import { produce } from 'immer'
-import React, {
-  SetStateAction,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react'
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
 
+import { useBehaviors } from '@/components/keyboard/useBehaviors.ts'
+import { useLayouts } from '@/components/keyboard/useLayout.ts'
+import { useEditHistory } from '@/components/providers/edit-history/useEditHistory.ts'
 import { ConnectionContext } from '@/components/providers/rpc-connect/ConnectionContext.tsx'
 import { useConnectedDeviceData } from '@/components/providers/rpc-connect/useConnectedDeviceData.ts'
 
 import { BehaviorBindingPicker } from '../behaviors/BehaviorBindingPicker'
-import { LockStateContext } from '../components/providers/rpc-lock-state/LockStateContext.ts'
 import { call_rpc } from '../lib/logging.ts'
 import { useLocalStorageState } from '../misc/useLocalStorageState'
-import { UndoRedoContext } from '../undoRedo'
 import { Keymap as KeymapComp } from './Keymap'
 import { LayerPicker } from './LayerPicker'
 import { LayoutZoom } from './PhysicalLayout'
 import { PhysicalLayoutPicker } from './PhysicalLayoutPicker'
 
-type BehaviorMap = Record<number, GetBehaviorDetailsResponse>
-
 function deserializeLayoutZoom(value: string): LayoutZoom {
   return value === 'auto' ? 'auto' : parseFloat(value) || 'auto'
-}
-
-function useBehaviors(): BehaviorMap {
-  const connection = useContext(ConnectionContext)
-  const lockState = useContext(LockStateContext)
-
-  const [behaviors, setBehaviors] = useState<BehaviorMap>({})
-
-  useEffect(() => {
-    if (
-      !connection.conn ||
-      lockState != LockState.ZMK_STUDIO_CORE_LOCK_STATE_UNLOCKED
-    ) {
-      setBehaviors({})
-      return
-    }
-
-    async function startRequest() {
-      setBehaviors({})
-
-      if (!connection.conn) {
-        return
-      }
-
-      const get_behaviors: Request = {
-        behaviors: { listAllBehaviors: true },
-        requestId: 0,
-      }
-
-      const behavior_list = await call_rpc(connection.conn, get_behaviors)
-      if (!ignore) {
-        const behavior_map: BehaviorMap = {}
-        for (const behaviorId of behavior_list.behaviors?.listAllBehaviors
-          ?.behaviors || []) {
-          if (ignore) {
-            break
-          }
-          const details_req = {
-            behaviors: { getBehaviorDetails: { behaviorId } },
-            requestId: 0,
-          }
-          const behavior_details = await call_rpc(connection.conn, details_req)
-          const dets: GetBehaviorDetailsResponse | undefined =
-            behavior_details?.behaviors?.getBehaviorDetails
-
-          if (dets) {
-            behavior_map[dets.id] = dets
-          }
-        }
-
-        if (!ignore) {
-          setBehaviors(behavior_map)
-        }
-      }
-    }
-
-    let ignore = false
-    startRequest()
-
-    return () => {
-      ignore = true
-    }
-  }, [connection, lockState])
-
-  return behaviors
-}
-
-function useLayouts(): [
-  PhysicalLayout[] | undefined,
-  React.Dispatch<SetStateAction<PhysicalLayout[] | undefined>>,
-  number,
-  React.Dispatch<SetStateAction<number>>,
-] {
-  const connection = useContext(ConnectionContext)
-  const lockState = useContext(LockStateContext)
-
-  const [layouts, setLayouts] = useState<PhysicalLayout[] | undefined>(
-    undefined,
-  )
-  const [selectedPhysicalLayoutIndex, setSelectedPhysicalLayoutIndex] =
-    useState<number>(0)
-
-  useEffect(() => {
-    if (
-      !connection.conn ||
-      lockState != LockState.ZMK_STUDIO_CORE_LOCK_STATE_UNLOCKED
-    ) {
-      setLayouts(undefined)
-      return
-    }
-
-    async function startRequest() {
-      setLayouts(undefined)
-
-      if (!connection.conn) {
-        return
-      }
-
-      const response = await call_rpc(connection.conn, {
-        keymap: { getPhysicalLayouts: true },
-      })
-
-      if (!ignore) {
-        setLayouts(response?.keymap?.getPhysicalLayouts?.layouts)
-        setSelectedPhysicalLayoutIndex(
-          response?.keymap?.getPhysicalLayouts?.activeLayoutIndex || 0,
-        )
-      }
-    }
-
-    let ignore = false
-    startRequest()
-
-    return () => {
-      ignore = true
-    }
-  }, [connection, lockState])
-
-  return [
-    layouts,
-    setLayouts,
-    selectedPhysicalLayoutIndex,
-    setSelectedPhysicalLayoutIndex,
-  ]
 }
 
 export default function Keyboard() {
@@ -192,8 +56,8 @@ export default function Keyboard() {
   >(undefined)
   const behaviors = useBehaviors()
 
-  const conn = useContext(ConnectionContext)
-  const undoRedo = useContext(UndoRedoContext)
+  const { conn } = useContext(ConnectionContext)
+  const { doIt: undoRedo } = useEditHistory()
 
   useEffect(() => {
     setSelectedLayerIndex(0)
@@ -202,11 +66,11 @@ export default function Keyboard() {
 
   useEffect(() => {
     async function performSetRequest() {
-      if (!conn.conn || !layouts) {
+      if (!conn || !layouts) {
         return
       }
 
-      const resp = await call_rpc(conn.conn, {
+      const resp = await call_rpc(conn, {
         keymap: { setActivePhysicalLayout: selectedPhysicalLayoutIndex },
       })
 
@@ -221,8 +85,8 @@ export default function Keyboard() {
       }
     }
 
-    performSetRequest()
-  }, [conn.conn, layouts, selectedPhysicalLayoutIndex, setKeymap])
+    performSetRequest().then(console.info).catch(console.error)
+  }, [conn, layouts, selectedPhysicalLayoutIndex, setKeymap])
 
   const doSelectPhysicalLayout = useCallback(
     (i: number) => {
@@ -252,11 +116,11 @@ export default function Keyboard() {
       const keyPosition = selectedKeyPosition
       const oldBinding = keymap.layers[layer].bindings[keyPosition]
       undoRedo?.(async () => {
-        if (!conn.conn) {
+        if (!conn) {
           throw new Error('Not connected')
         }
 
-        const resp = await call_rpc(conn.conn, {
+        const resp = await call_rpc(conn, {
           keymap: { setLayerBinding: { layerId, keyPosition, binding } },
         })
 
@@ -275,11 +139,11 @@ export default function Keyboard() {
         }
 
         return async () => {
-          if (!conn.conn) {
+          if (!conn) {
             return
           }
 
-          const resp = await call_rpc(conn.conn, {
+          const resp = await call_rpc(conn, {
             keymap: {
               setLayerBinding: { layerId, keyPosition, binding: oldBinding },
             },
@@ -303,7 +167,7 @@ export default function Keyboard() {
       selectedKeyPosition,
       selectedLayerIndex,
       undoRedo,
-      conn.conn,
+      conn,
       setKeymap,
     ],
   )
@@ -323,11 +187,11 @@ export default function Keyboard() {
   const moveLayer = useCallback(
     (start: number, end: number) => {
       const doMove = async (startIndex: number, destIndex: number) => {
-        if (!conn.conn) {
+        if (!conn) {
           return
         }
 
-        const resp = await call_rpc(conn.conn, {
+        const resp = await call_rpc(conn, {
           keymap: { moveLayer: { startIndex, destIndex } },
         })
 
@@ -344,16 +208,20 @@ export default function Keyboard() {
         return () => doMove(end, start)
       })
     },
-    [conn.conn, setKeymap, undoRedo],
+    [conn, setKeymap, undoRedo],
   )
 
   const addLayer = useCallback(() => {
     async function doAdd(): Promise<number> {
-      if (!conn.conn || !keymap) {
+      console.log(conn, keymap)
+
+      if (!conn || !keymap) {
         throw new Error('Not connected')
       }
 
-      const resp = await call_rpc(conn.conn, { keymap: { addLayer: {} } })
+      const resp = await call_rpc(conn, { keymap: { addLayer: {} } })
+
+      console.log(resp)
 
       if (resp.keymap?.addLayer?.ok) {
         const newSelection = keymap.layers.length
@@ -375,11 +243,11 @@ export default function Keyboard() {
     }
 
     async function doRemove(layerIndex: number) {
-      if (!conn.conn) {
+      if (!conn) {
         throw new Error('Not connected')
       }
 
-      const resp = await call_rpc(conn.conn, {
+      const resp = await call_rpc(conn, {
         keymap: { removeLayer: { layerIndex } },
       })
 
@@ -404,15 +272,15 @@ export default function Keyboard() {
       const index = await doAdd()
       return () => doRemove(index)
     })
-  }, [undoRedo, conn.conn, keymap, setKeymap])
+  }, [undoRedo, conn, keymap, setKeymap])
 
   const removeLayer = useCallback(() => {
     async function doRemove(layerIndex: number): Promise<void> {
-      if (!conn.conn || !keymap) {
+      if (!conn || !keymap) {
         throw new Error('Not connected')
       }
 
-      const resp = await call_rpc(conn.conn, {
+      const resp = await call_rpc(conn, {
         keymap: { removeLayer: { layerIndex } },
       })
 
@@ -436,11 +304,11 @@ export default function Keyboard() {
     }
 
     async function doRestore(layerId: number, atIndex: number) {
-      if (!conn.conn) {
+      if (!conn) {
         throw new Error('Not connected')
       }
 
-      const resp = await call_rpc(conn.conn, {
+      const resp = await call_rpc(conn, {
         keymap: { restoreLayer: { layerId, atIndex } },
       })
 
@@ -472,16 +340,16 @@ export default function Keyboard() {
       await doRemove(index)
       return () => doRestore(layerId, index)
     })
-  }, [keymap, selectedLayerIndex, undoRedo, conn.conn, setKeymap])
+  }, [keymap, selectedLayerIndex, undoRedo, conn, setKeymap])
 
   const changeLayerName = useCallback(
     (id: number, oldName: string, newName: string) => {
       async function changeName(layerId: number, name: string) {
-        if (!conn.conn) {
+        if (!conn) {
           throw new Error('Not connected')
         }
 
-        const resp = await call_rpc(conn.conn, {
+        const resp = await call_rpc(conn, {
           keymap: { setLayerProps: { layerId, name } },
         })
 
@@ -512,7 +380,7 @@ export default function Keyboard() {
         }
       })
     },
-    [undoRedo, conn.conn, setKeymap],
+    [undoRedo, conn, setKeymap],
   )
 
   useEffect(() => {

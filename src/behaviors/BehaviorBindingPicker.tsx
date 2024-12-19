@@ -90,7 +90,7 @@ export const BehaviorBindingPicker = ({
         param2: param2 || 0,
       });
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+     
   }, [behaviorId, param1, param2]);
 
   useEffect(() => {

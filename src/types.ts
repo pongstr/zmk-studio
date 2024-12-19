@@ -1,3 +1,4 @@
+import type { GetBehaviorDetailsResponse } from '@zmkfirmware/zmk-studio-ts-client/behaviors'
 import type { RpcConnection } from '@zmkfirmware/zmk-studio-ts-client/index'
 import type { RpcTransport } from '@zmkfirmware/zmk-studio-ts-client/transport/index'
 import { Dispatch, SetStateAction } from 'react'
@@ -61,3 +62,8 @@ export type KeyboardContextType = {
   selectedLayer: number
   setSelectedLayer: Dispatch<SetStateAction<number>>
 }
+
+export type UndoCallback = () => Promise<void>
+export type DoCallback = () => Promise<UndoCallback>
+
+export type BehaviorMap = Record<number, GetBehaviorDetailsResponse>

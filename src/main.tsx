@@ -9,6 +9,7 @@ import { DialogLicense } from '@/components/blocks/dialog-license'
 import { Header } from '@/components/blocks/header/header'
 import { ZmkStudioFooter } from '@/components/blocks/zmk-studio-footer'
 import { ConnectionProvider } from '@/components/providers/rpc-connect/ConnectionProvider.tsx'
+import { LockStateProvider } from '@/components/providers/rpc-lock-state/LockStateProvider'
 import { ThemeProvider } from '@/components/providers/theme/theme-provider'
 import { Toaster } from '@/components/ui/sonner'
 
@@ -17,11 +18,13 @@ ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
     <Suspense>
       <ThemeProvider>
         <ConnectionProvider>
-          <Header />
-          <main className="h-[calc(100vh_-_100px)] w-screen">
-            <App />
-          </main>
-          <ZmkStudioFooter />
+          <LockStateProvider>
+            <Header />
+            <main className="h-[calc(100vh_-_100px)] w-screen">
+              <App />
+            </main>
+            <ZmkStudioFooter />
+          </LockStateProvider>
         </ConnectionProvider>
         <DialogAbout />
         <DialogLicense />

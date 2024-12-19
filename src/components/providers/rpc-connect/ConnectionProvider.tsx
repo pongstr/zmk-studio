@@ -27,12 +27,9 @@ const DisconnectPrompt: FC<{ deviceName?: string }> = ({ deviceName }) => (
 export const ConnectionProvider: FC<PropsWithChildren> = ({ children }) => {
   const abort = useRef<AbortController | null>(null)
 
-  const [conn, setConn] = useState<ConnectionState>({
+  const [conn, setConn] = useState<Pick<ConnectionState, 'conn' | 'isOpen'>>({
     isOpen: false,
     conn: null,
-    transports: [],
-    onConnect: () => {},
-    disconnect: () => {},
   })
 
   const [deviceName, setConnectedDeviceName] = useState<string | undefined>(
@@ -43,6 +40,8 @@ export const ConnectionProvider: FC<PropsWithChildren> = ({ children }) => {
     (transport: RpcTransport) => {
       abort.current = new AbortController()
       connect(transport, setConn, setConnectedDeviceName, abort.current.signal)
+        .then(console.info)
+        .catch(console.error)
     },
     [setConnectedDeviceName],
   )

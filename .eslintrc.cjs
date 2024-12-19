@@ -14,7 +14,7 @@ module.exports = {
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
   parser: '@typescript-eslint/parser',
-  plugins: ['simple-import-sort', 'react-refresh'],
+  plugins: ['simple-import-sort', 'react-refresh', 'react-hooks'],
   rules: {
     'tailwindcss/no-custom-classname': 'off',
     '@typescript-eslint/no-unused-vars': [
