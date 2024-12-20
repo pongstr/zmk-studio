@@ -28,7 +28,6 @@ export const KeyboardViewport: FC<KeyboardViewportType> = ({
     }
 
     function panMove(e: PointerEvent) {
-      console.log(isPanningActive)
       if (!isPanningActive) return
       offset.x += e.movementX
       offset.y += e.movementY

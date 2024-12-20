@@ -53,7 +53,6 @@ export const PhysicalLayoutPicker = () => {
     [layouts, onPhysicalLayoutClicked],
   )
 
-  console.log(layouts, selectedPhysicalLayoutIndex)
   if (!layouts.length || !layouts[selectedPhysicalLayoutIndex]) return null
 
   return (
