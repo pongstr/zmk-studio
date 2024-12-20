@@ -57,7 +57,7 @@ export async function listen_for_notifications(
 
 export async function connect(
   transport: RpcTransport,
-  setConn: Dispatch<Pick<ConnectionState, 'conn' | 'isOpen'>>,
+  setConn: Dispatch<Pick<ConnectionState, 'conn'>>,
   setConnectedDeviceName: Dispatch<string | undefined>,
   signal: AbortSignal,
 ) {
@@ -65,6 +65,11 @@ export async function connect(
 
   const data = await Promise.race([
     call_rpc(conn, { core: { getDeviceInfo: true } })
+      .then((r) => {
+        console.log('r', r)
+
+        return r
+      })
       .then((r) => r?.core?.getDeviceInfo)
       .catch((e) => {
         console.error('Failed first RPC call', e)
@@ -79,16 +84,18 @@ export async function connect(
     return
   }
 
+  console.log(data, conn)
+
   listen_for_notifications(conn.notification_readable, signal)
     .then(() => {
       setConnectedDeviceName(undefined)
-      setConn({ conn: null, isOpen: true })
+      setConn({ conn: null })
     })
     .catch(() => {
       setConnectedDeviceName(undefined)
-      setConn({ conn: null, isOpen: true })
+      setConn({ conn: null })
     })
 
   setConnectedDeviceName(data.name)
-  setConn({ conn, isOpen: false })
+  setConn({ conn })
 }

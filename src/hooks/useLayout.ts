@@ -6,29 +6,29 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { useConnectionContext } from '@/components/providers/rpc-connect/useConnectionContext.tsx'
 import { useLockState } from '@/components/providers/rpc-lock-state/useLockState.ts'
 
-export function useLayouts(): [
-  PhysicalLayout[] | undefined,
-  Dispatch<SetStateAction<PhysicalLayout[] | undefined>>,
+type UseLayoutsReturnType = [
+  PhysicalLayout[],
+  Dispatch<SetStateAction<PhysicalLayout[]>>,
   number,
   Dispatch<SetStateAction<number>>,
-] {
+]
+
+export function useLayouts(): UseLayoutsReturnType {
   const { conn } = useConnectionContext()
   const lockState = useLockState()
 
-  const [layouts, setLayouts] = useState<PhysicalLayout[] | undefined>(
-    undefined,
-  )
+  const [layouts, setLayouts] = useState<PhysicalLayout[]>([])
   const [selectedPhysicalLayoutIndex, setSelectedPhysicalLayoutIndex] =
     useState<number>(0)
 
   useEffect(() => {
     if (!conn || lockState != LockState.ZMK_STUDIO_CORE_LOCK_STATE_UNLOCKED) {
-      setLayouts(undefined)
+      setLayouts([])
       return
     }
 
     async function startRequest() {
-      setLayouts(undefined)
+      setLayouts([])
 
       if (!conn) {
         return
@@ -39,9 +39,9 @@ export function useLayouts(): [
       })
 
       if (!ignore) {
-        setLayouts(response?.keymap?.getPhysicalLayouts?.layouts)
+        setLayouts(response?.keymap?.getPhysicalLayouts?.layouts ?? [])
         setSelectedPhysicalLayoutIndex(
-          response?.keymap?.getPhysicalLayouts?.activeLayoutIndex || 0,
+          response?.keymap?.getPhysicalLayouts?.activeLayoutIndex ?? 0,
         )
       }
     }

@@ -1,4 +1,4 @@
-import { useCallback } from "react";
+import { useCallback } from 'react'
 import {
   Button,
   Key,
@@ -9,36 +9,52 @@ import {
   Select,
   SelectValue,
   Text,
-} from "react-aria-components";
+} from 'react-aria-components'
 
-import { type KeyPosition,PhysicalLayout } from "./PhysicalLayout";
+import { useEditHistory } from '@/components/providers/edit-history/useEditHistory.ts'
+import { useLayouts } from '@/hooks/useLayout.ts'
+
+import { type KeyPosition, PhysicalLayout } from './PhysicalLayout'
 
 export interface PhysicalLayoutItem {
-  name: string;
-  keys: Array<KeyPosition>;
+  name: string
+  keys: Array<KeyPosition>
 }
 
-export type PhysicalLayoutClickCallback = (index: number) => void;
+export const PhysicalLayoutPicker = () => {
+  const [
+    layouts,
+    _setLayouts,
+    selectedPhysicalLayoutIndex,
+    setSelectedPhysicalLayoutIndex,
+  ] = useLayouts()
 
-export interface PhysicalLayoutPickerProps {
-  layouts: Array<PhysicalLayoutItem>;
+  const { doIt: undoRedo } = useEditHistory()
 
-  selectedPhysicalLayoutIndex: number;
+  const onPhysicalLayoutClicked = useCallback(
+    (i: number) => {
+      const oldLayout = selectedPhysicalLayoutIndex
+      undoRedo?.(async () => {
+        setSelectedPhysicalLayoutIndex(i)
 
-  onPhysicalLayoutClicked?: PhysicalLayoutClickCallback;
-}
+        return async () => {
+          setSelectedPhysicalLayoutIndex(oldLayout)
+        }
+      })
+    },
+    [selectedPhysicalLayoutIndex, undoRedo, setSelectedPhysicalLayoutIndex],
+  )
 
-export const PhysicalLayoutPicker = ({
-  layouts,
-  selectedPhysicalLayoutIndex,
-  onPhysicalLayoutClicked,
-}: PhysicalLayoutPickerProps) => {
   const selectionChanged = useCallback(
     (e: Key) => {
-      onPhysicalLayoutClicked?.(layouts.findIndex((l) => l.name === e));
+      if (!layouts) return
+      onPhysicalLayoutClicked?.(layouts.findIndex((l) => l.name === e))
     },
-    [layouts, onPhysicalLayoutClicked]
-  );
+    [layouts, onPhysicalLayoutClicked],
+  )
+
+  console.log(layouts, selectedPhysicalLayoutIndex)
+  if (!layouts.length || !layouts[selectedPhysicalLayoutIndex]) return null
 
   return (
     <Select
@@ -46,11 +62,11 @@ export const PhysicalLayoutPicker = ({
       className="flex flex-col"
       selectedKey={layouts[selectedPhysicalLayoutIndex].name}
     >
-      <Label className="text-sm after:content-[':']">Layout</Label>
+      <Label className="hidden">Layout</Label>
       <Button className="ml-2 min-w-24 rounded p-1 text-left hover:bg-base-300">
         <SelectValue<PhysicalLayoutItem>>
           {(v) => {
-            return <span>{v.selectedItem?.name}</span>;
+            return <span>{v.selectedItem?.name}</span>
           }}
         </SelectValue>
       </Button>
@@ -76,7 +92,7 @@ export const PhysicalLayoutPicker = ({
                       r: (r || 0) / 100.0,
                       rx: (rx || 0) / 100.0,
                       ry: (ry || 0) / 100.0,
-                    })
+                    }),
                   )}
                 />
               </div>
@@ -85,5 +101,5 @@ export const PhysicalLayoutPicker = ({
         </ListBox>
       </Popover>
     </Select>
-  );
-};
+  )
+}

@@ -1,18 +1,16 @@
 import {
   BehaviorBinding,
   Keymap,
-  Layer,
   SetLayerBindingResponse,
-  SetLayerPropsResponse,
 } from '@zmkfirmware/zmk-studio-ts-client/keymap'
 import { produce } from 'immer'
-import { useCallback, useContext, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { useBehaviors } from '@/components/keyboard/useBehaviors.ts'
-import { useLayouts } from '@/components/keyboard/useLayout.ts'
 import { useEditHistory } from '@/components/providers/edit-history/useEditHistory.ts'
-import { ConnectionContext } from '@/components/providers/rpc-connect/ConnectionContext.tsx'
 import { useConnectedDeviceData } from '@/components/providers/rpc-connect/useConnectedDeviceData.ts'
+import { useConnectionContext } from '@/components/providers/rpc-connect/useConnectionContext.tsx'
+import { useBehaviors } from '@/hooks/useBehaviors.ts'
+import { useLayouts } from '@/hooks/useLayout.ts'
 
 import { BehaviorBindingPicker } from '../behaviors/BehaviorBindingPicker'
 import { call_rpc } from '../lib/logging.ts'
@@ -27,12 +25,12 @@ function deserializeLayoutZoom(value: string): LayoutZoom {
 }
 
 export default function Keyboard() {
-  const [
-    layouts,
-    _setLayouts,
-    selectedPhysicalLayoutIndex,
-    setSelectedPhysicalLayoutIndex,
-  ] = useLayouts()
+  // TODO: maybe add to keyboard provider
+  const [layouts, _setLayouts, selectedPhysicalLayoutIndex] = useLayouts()
+
+  console.log(layouts)
+
+  // TODO: potentially add to keyboard provider
   const [keymap, setKeymap] = useConnectedDeviceData<Keymap>(
     { keymap: { getKeymap: true } },
     (keymap) => {
@@ -56,7 +54,7 @@ export default function Keyboard() {
   >(undefined)
   const behaviors = useBehaviors()
 
-  const { conn } = useContext(ConnectionContext)
+  const { conn } = useConnectionContext()
   const { doIt: undoRedo } = useEditHistory()
 
   useEffect(() => {
@@ -87,20 +85,6 @@ export default function Keyboard() {
 
     performSetRequest().then(console.info).catch(console.error)
   }, [conn, layouts, selectedPhysicalLayoutIndex, setKeymap])
-
-  const doSelectPhysicalLayout = useCallback(
-    (i: number) => {
-      const oldLayout = selectedPhysicalLayoutIndex
-      undoRedo?.(async () => {
-        setSelectedPhysicalLayoutIndex(i)
-
-        return async () => {
-          setSelectedPhysicalLayoutIndex(oldLayout)
-        }
-      })
-    },
-    [selectedPhysicalLayoutIndex, undoRedo, setSelectedPhysicalLayoutIndex],
-  )
 
   const doUpdateBinding = useCallback(
     (binding: BehaviorBinding) => {
@@ -184,205 +168,6 @@ export default function Keyboard() {
     return keymap.layers[selectedLayerIndex].bindings[selectedKeyPosition]
   }, [keymap, selectedLayerIndex, selectedKeyPosition])
 
-  const moveLayer = useCallback(
-    (start: number, end: number) => {
-      const doMove = async (startIndex: number, destIndex: number) => {
-        if (!conn) {
-          return
-        }
-
-        const resp = await call_rpc(conn, {
-          keymap: { moveLayer: { startIndex, destIndex } },
-        })
-
-        if (resp.keymap?.moveLayer?.ok) {
-          setKeymap(resp.keymap?.moveLayer?.ok)
-          setSelectedLayerIndex(destIndex)
-        } else {
-          console.error('Error moving', resp)
-        }
-      }
-
-      undoRedo?.(async () => {
-        await doMove(start, end)
-        return () => doMove(end, start)
-      })
-    },
-    [conn, setKeymap, undoRedo],
-  )
-
-  const addLayer = useCallback(() => {
-    async function doAdd(): Promise<number> {
-      console.log(conn, keymap)
-
-      if (!conn || !keymap) {
-        throw new Error('Not connected')
-      }
-
-      const resp = await call_rpc(conn, { keymap: { addLayer: {} } })
-
-      console.log(resp)
-
-      if (resp.keymap?.addLayer?.ok) {
-        const newSelection = keymap.layers.length
-        setKeymap(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          produce((draft: any) => {
-            draft.layers.push(resp.keymap!.addLayer!.ok!.layer)
-            draft.availableLayers--
-          }),
-        )
-
-        setSelectedLayerIndex(newSelection)
-
-        return resp.keymap.addLayer.ok.index
-      } else {
-        console.error('Add error', resp.keymap?.addLayer?.err)
-        throw new Error('Failed to add layer:' + resp.keymap?.addLayer?.err)
-      }
-    }
-
-    async function doRemove(layerIndex: number) {
-      if (!conn) {
-        throw new Error('Not connected')
-      }
-
-      const resp = await call_rpc(conn, {
-        keymap: { removeLayer: { layerIndex } },
-      })
-
-      console.log(resp)
-      if (resp.keymap?.removeLayer?.ok) {
-        setKeymap(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          produce((draft: any) => {
-            draft.layers.splice(layerIndex, 1)
-            draft.availableLayers++
-          }),
-        )
-      } else {
-        console.error('Remove error', resp.keymap?.removeLayer?.err)
-        throw new Error(
-          'Failed to remove layer:' + resp.keymap?.removeLayer?.err,
-        )
-      }
-    }
-
-    undoRedo?.(async () => {
-      const index = await doAdd()
-      return () => doRemove(index)
-    })
-  }, [undoRedo, conn, keymap, setKeymap])
-
-  const removeLayer = useCallback(() => {
-    async function doRemove(layerIndex: number): Promise<void> {
-      if (!conn || !keymap) {
-        throw new Error('Not connected')
-      }
-
-      const resp = await call_rpc(conn, {
-        keymap: { removeLayer: { layerIndex } },
-      })
-
-      if (resp.keymap?.removeLayer?.ok) {
-        if (layerIndex == keymap.layers.length - 1) {
-          setSelectedLayerIndex(layerIndex - 1)
-        }
-        setKeymap(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          produce((draft: any) => {
-            draft.layers.splice(layerIndex, 1)
-            draft.availableLayers++
-          }),
-        )
-      } else {
-        console.error('Remove error', resp.keymap?.removeLayer?.err)
-        throw new Error(
-          'Failed to remove layer:' + resp.keymap?.removeLayer?.err,
-        )
-      }
-    }
-
-    async function doRestore(layerId: number, atIndex: number) {
-      if (!conn) {
-        throw new Error('Not connected')
-      }
-
-      const resp = await call_rpc(conn, {
-        keymap: { restoreLayer: { layerId, atIndex } },
-      })
-
-      console.log(resp)
-      if (resp.keymap?.restoreLayer?.ok) {
-        setKeymap(
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          produce((draft: any) => {
-            draft.layers.splice(atIndex, 0, resp!.keymap!.restoreLayer!.ok)
-            draft.availableLayers--
-          }),
-        )
-        setSelectedLayerIndex(atIndex)
-      } else {
-        console.error('Remove error', resp.keymap?.restoreLayer?.err)
-        throw new Error(
-          'Failed to restore layer:' + resp.keymap?.restoreLayer?.err,
-        )
-      }
-    }
-
-    if (!keymap) {
-      throw new Error('No keymap loaded')
-    }
-
-    const index = selectedLayerIndex
-    const layerId = keymap.layers[index].id
-    undoRedo?.(async () => {
-      await doRemove(index)
-      return () => doRestore(layerId, index)
-    })
-  }, [keymap, selectedLayerIndex, undoRedo, conn, setKeymap])
-
-  const changeLayerName = useCallback(
-    (id: number, oldName: string, newName: string) => {
-      async function changeName(layerId: number, name: string) {
-        if (!conn) {
-          throw new Error('Not connected')
-        }
-
-        const resp = await call_rpc(conn, {
-          keymap: { setLayerProps: { layerId, name } },
-        })
-
-        if (
-          resp.keymap?.setLayerProps ==
-          SetLayerPropsResponse.SET_LAYER_PROPS_RESP_OK
-        ) {
-          setKeymap(
-            // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            produce((draft: any) => {
-              const layer_index = draft.layers.findIndex(
-                (l: Layer) => l.id == layerId,
-              )
-              draft.layers[layer_index].name = name
-            }),
-          )
-        } else {
-          throw new Error(
-            'Failed to change layer name:' + resp.keymap?.setLayerProps,
-          )
-        }
-      }
-
-      undoRedo?.(async () => {
-        await changeName(id, newName)
-        return async () => {
-          await changeName(id, oldName)
-        }
-      })
-    },
-    [undoRedo, conn, setKeymap],
-  )
-
   useEffect(() => {
     if (!keymap?.layers) return
 
@@ -396,33 +181,23 @@ export default function Keyboard() {
   return (
     <div className="grid min-h-0 min-w-0 max-w-full grid-cols-[auto_1fr] grid-rows-[1fr_minmax(10em,auto)] bg-base-300">
       <div className="row-span-2 flex flex-col gap-2 bg-base-200 p-2">
-        {layouts && (
-          <div className="col-start-3 row-start-1 row-end-2">
-            <PhysicalLayoutPicker
-              layouts={layouts}
-              selectedPhysicalLayoutIndex={selectedPhysicalLayoutIndex}
-              onPhysicalLayoutClicked={doSelectPhysicalLayout}
-            />
-          </div>
-        )}
+        <div className="col-start-3 row-start-1 row-end-2">
+          {Boolean(layouts.length) && <PhysicalLayoutPicker />}
+        </div>
 
         {keymap && (
           <div className="col-start-1 row-start-1 row-end-2">
             <LayerPicker
-              layers={keymap.layers}
+              keymap={keymap}
+              setKeymap={setKeymap}
               selectedLayerIndex={selectedLayerIndex}
-              onLayerClicked={setSelectedLayerIndex}
-              onLayerMoved={moveLayer}
-              canAdd={(keymap.availableLayers || 0) > 0}
-              canRemove={(keymap.layers?.length || 0) > 1}
-              onAddClicked={addLayer}
-              onRemoveClicked={removeLayer}
-              onLayerNameChanged={changeLayerName}
+              setSelectedLayerIndex={setSelectedLayerIndex}
             />
           </div>
         )}
       </div>
-      {layouts && keymap && behaviors && (
+
+      {Boolean(layouts.length) && keymap && behaviors && (
         <div className="relative col-start-2 row-start-1 grid min-w-0 items-center justify-center p-2">
           <KeymapComp
             keymap={keymap}

@@ -1,18 +1,18 @@
-import type { Meta, StoryObj } from "@storybook/react";
-import { fn } from "@storybook/test";
+import type { Meta, StoryObj } from '@storybook/react'
+import { fn } from '@storybook/test'
 
-import { LayerPicker } from "./LayerPicker";
+import { LayerPicker } from './LayerPicker'
 
 // More on how to set up stories at: https://storybook.js.org/docs/writing-stories#default-export
 const meta = {
-  title: "Keyboard/LayerPicker",
+  title: 'Keyboard/LayerPicker',
   component: LayerPicker,
   parameters: {
     // Optional parameter to center the component in the Canvas. More info: https://storybook.js.org/docs/configure/story-layout
-    layout: "centered",
+    layout: 'centered',
   },
   // This component will have an automatically generated Autodocs entry: https://storybook.js.org/docs/writing-docs/autodocs
-  tags: ["autodocs"],
+  tags: ['autodocs'],
   // More on argTypes: https://storybook.js.org/docs/api/argtypes
   argTypes: {
     // backgroundColor: { control: 'color' },
@@ -21,26 +21,40 @@ const meta = {
   args: {
     onLayerClicked: fn(),
   },
-} satisfies Meta<typeof LayerPicker>;
+} satisfies Meta<typeof LayerPicker>
 
-export default meta;
-type Story = StoryObj<typeof meta>;
+export default meta
+type Story = StoryObj<typeof meta>
 
 export const Named: Story = {
   args: {
-    layers: [
-      { id: 1, name: "Base" },
-      { id: 2, name: "Num" },
-      { id: 3, name: "Nav" },
-      { id: 4, name: "Symbol" },
-    ],
+    setKeymap: () => {},
+    keymap: {
+      availableLayers: 1,
+      maxLayerNameLength: 20,
+      layers: [
+        { id: 1, name: 'Base', bindings: [] },
+        { id: 2, name: 'Num', bindings: [] },
+        { id: 3, name: 'Nav', bindings: [] },
+        { id: 4, name: 'Symbol', bindings: [] },
+      ],
+    },
     selectedLayerIndex: 2,
   },
-};
+}
 
 export const NoNames: Story = {
   args: {
-    layers: [{ id: 1 }, { id: 2 }, { id: 3 }],
+    setKeymap: () => {},
     selectedLayerIndex: 0,
+    keymap: {
+      availableLayers: 1,
+      maxLayerNameLength: 20,
+      layers: [
+        { id: 1, bindings: [], name: '' },
+        { id: 2, bindings: [], name: '' },
+        { id: 3, bindings: [], name: '' },
+      ],
+    },
   },
-};
+}

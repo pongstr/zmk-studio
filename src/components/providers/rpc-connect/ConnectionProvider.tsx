@@ -27,8 +27,7 @@ const DisconnectPrompt: FC<{ deviceName?: string }> = ({ deviceName }) => (
 export const ConnectionProvider: FC<PropsWithChildren> = ({ children }) => {
   const abort = useRef<AbortController | null>(null)
 
-  const [conn, setConn] = useState<Pick<ConnectionState, 'conn' | 'isOpen'>>({
-    isOpen: false,
+  const [conn, setConn] = useState<Pick<ConnectionState, 'conn'>>({
     conn: null,
   })
 

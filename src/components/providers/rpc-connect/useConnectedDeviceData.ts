@@ -1,18 +1,19 @@
 import { Request, RequestResponse } from '@zmkfirmware/zmk-studio-ts-client'
 import { LockState } from '@zmkfirmware/zmk-studio-ts-client/core'
-import React, { SetStateAction, useContext, useEffect, useState } from 'react'
+import React, { SetStateAction, useEffect, useState } from 'react'
+
+import { useConnectionContext } from '@/components/providers/rpc-connect/useConnectionContext.tsx'
+import { useLockState } from '@/components/providers/rpc-lock-state/useLockState.ts'
 
 import { call_rpc } from '../../../lib/logging.ts'
-import { LockStateContext } from '../rpc-lock-state/LockStateContext.ts'
-import { ConnectionContext } from './ConnectionContext.tsx'
 
 export function useConnectedDeviceData<T>(
   req: Omit<Request, 'requestId'>,
   response_mapper: (resp: RequestResponse) => T | undefined,
   requireUnlock?: boolean,
 ): [T | undefined, React.Dispatch<SetStateAction<T | undefined>>] {
-  const connection = useContext(ConnectionContext)
-  const lockState = useContext(LockStateContext)
+  const connection = useConnectionContext()
+  const lockState = useLockState()
   const [data, setData] = useState<T | undefined>(undefined)
 
   useEffect(
@@ -40,7 +41,7 @@ export function useConnectedDeviceData<T>(
       }
 
       let ignore = false
-      startRequest()
+      startRequest().then(console.info).catch(console.error)
 
       return () => {
         ignore = true
