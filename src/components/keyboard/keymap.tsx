@@ -93,27 +93,6 @@ export const Keymap: FC = () => {
     })
   }, [keymap, currentLayer, behaviors, selectedPhysicalLayoutIndex])
 
-  const inputRef = useRef<HTMLInputElement>(null)
-  const scaleRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    if (!inputRef.current || !scaleRef.current) return
-
-    const input = inputRef.current
-    const target = scaleRef.current
-
-    function onInputChange(e: Event) {
-      const value = (e.currentTarget as HTMLInputElement).value
-      target.style.setProperty('transform', `scale(${value})`)
-    }
-
-    input.addEventListener('change', onInputChange)
-
-    return () => {
-      input.removeEventListener('change', onInputChange)
-    }
-  }, [])
-
   // TODO: Add a bit of padding for rotation when supported
   const rightMost = positions
     .map((k) => k.x + k.width)
@@ -124,49 +103,29 @@ export const Keymap: FC = () => {
     .reduce((a, b) => Math.max(a, b), 0)
 
   return (
-    <>
-      <div
-        ref={scaleRef}
-        className="relative flex size-full items-center justify-center"
-        style={{
-          height: bottomMost * oneU + 'px',
-          width: rightMost * oneU + 'px',
-        }}
-      >
-        {positions.length > 0 &&
-          positions.map((p, idx) => (
-            <div
-              key={idx}
-              onClick={() =>
-                setSelectedKeyPosition((prev: number | undefined) =>
-                  prev !== idx ? idx : undefined,
-                )
-              }
-              className="absolute leading-[0] data-[zoomer=true]:hover:z-[1000]"
-              data-zoomer={true}
-              style={scalePosition(p, oneU)}
-            >
-              <Key
-                hoverZoom={true}
-                oneU={oneU}
-                selected={idx === selectedKeyPosition}
-                {...p}
-              />
-            </div>
-          ))}
-      </div>
-
-      {/* eslint-disable-next-line tailwindcss/no-unnecessary-arbitrary-value */}
-      <div className="absolute bottom-[240px] left-[50%] ml-[-220px] w-[440px]">
-        <input
-          type="range"
-          name="scale"
-          min={0.75}
-          max={2}
-          step={0.02}
-          ref={inputRef}
-        />
-      </div>
-    </>
+    <div
+      className="relative flex size-full items-center justify-center"
+      style={{
+        height: `${bottomMost * oneU}px`,
+        width: `${rightMost * oneU}px`,
+      }}
+    >
+      {positions.length > 0 &&
+        positions.map((p, idx) => (
+          <div
+            key={idx}
+            onClick={() =>
+              setSelectedKeyPosition((prev: number | undefined) =>
+                prev !== idx ? idx : undefined,
+              )
+            }
+            className="absolute leading-[0] data-[zoomer=true]:hover:z-[1000]"
+            data-zoomer={true}
+            style={scalePosition(p, oneU)}
+          >
+            <Key hoverZoom={true} oneU={oneU} {...p} />
+          </div>
+        ))}
+    </div>
   )
 }
