@@ -28,8 +28,6 @@ export default function Keyboard() {
   // TODO: maybe add to keyboard provider
   const [layouts, _setLayouts, selectedPhysicalLayoutIndex] = useLayouts()
 
-  console.log(layouts)
-
   // TODO: potentially add to keyboard provider
   const [keymap, setKeymap] = useConnectedDeviceData<Keymap>(
     { keymap: { getKeymap: true } },

@@ -18,13 +18,18 @@ export const KeyboardViewport: FC<KeyboardViewportType> = ({
     const offset = { x: 0, y: 0 }
     let isPanningActive = false
 
-    function panStart(e: PointerEvent) {
+    function panStart(e: KeyboardEvent) {
+      if (e.key !== ' ') return
       e.preventDefault()
+
+      target.style.cursor = 'grab'
       isPanningActive = true
     }
 
-    function panEnd() {
+    function panEnd(e: KeyboardEvent) {
+      if (e.key !== ' ') return
       isPanningActive = false
+      target.style.cursor = 'unset'
     }
 
     function panMove(e: PointerEvent) {
@@ -34,13 +39,13 @@ export const KeyboardViewport: FC<KeyboardViewportType> = ({
       target.style.translate = `${offset.x}px ${offset.y}px`
     }
 
-    target.addEventListener('pointerdown', panStart)
-    target.addEventListener('pointerup', panEnd)
+    document.addEventListener('keydown', panStart)
+    document.addEventListener('keyup', panEnd)
     target.addEventListener('pointermove', panMove)
 
     return () => {
-      target.removeEventListener('pointerdown', panStart)
-      target.removeEventListener('pointerup', panEnd)
+      document.removeEventListener('keydown', panStart)
+      document.removeEventListener('keyup', panEnd)
       target.removeEventListener('pointermove', panMove)
     }
   }, [])

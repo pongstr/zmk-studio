@@ -1,7 +1,7 @@
 import { FC, useState } from 'react'
 
 import { KeyboardViewport } from '@/components/keyboard/keyboard-viewport.tsx'
-import { KeymapComp } from '@/components/keyboard/keymap-comp.tsx'
+import { Keymap as KeymapComponent } from '@/components/keyboard/keymap.tsx'
 import { useKeyboardContext } from '@/components/providers/keyboard/use-keyboard-context.ts'
 import { useBehaviors } from '@/hooks/useBehaviors.ts'
 import { useLayouts } from '@/hooks/useLayout.ts'
@@ -30,7 +30,7 @@ export const Keyboard: FC = () => {
       {Boolean(layouts.length) && keymap && behaviors ? (
         <>
           <KeyboardViewport className="absolute left-0 top-0 z-0">
-            <KeymapComp />
+            <KeymapComponent />
           </KeyboardViewport>
         </>
       ) : (
