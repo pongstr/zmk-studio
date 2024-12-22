@@ -1,4 +1,12 @@
-import { CSSProperties, FC, FormEvent, useMemo, useState } from 'react'
+import {
+  CSSProperties,
+  FC,
+  FormEvent,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 
 import { useKeyboardContext } from '@/components/providers/keyboard/use-keyboard-context.ts'
 import { useBehaviors } from '@/hooks/useBehaviors.ts'
@@ -85,18 +93,26 @@ export const Keymap: FC = () => {
     })
   }, [keymap, currentLayer, behaviors, selectedPhysicalLayoutIndex])
 
-  const onChange = (e: FormEvent<HTMLInputElement>) => {
-    console.log(e.currentTarget.value)
-    setScale(Number(e.currentTarget.value))
-  }
+  const inputRef = useRef<HTMLInputElement>(null)
+  const scaleRef = useRef<HTMLDivElement>(null)
 
-  const onSliderEnd = (e: FormEvent<HTMLInputElement>) => {
-    setScale(Number(e.currentTarget.value))
-  }
+  useEffect(() => {
+    if (!inputRef.current || !scaleRef.current) return
 
-  if (!positions.length) {
-    return <div>Loading</div>
-  }
+    const input = inputRef.current
+    const target = scaleRef.current
+
+    function onInputChange(e: Event) {
+      const value = (e.currentTarget as HTMLInputElement).value
+      target.style.setProperty('transform', `scale(${value})`)
+    }
+
+    input.addEventListener('change', onInputChange)
+
+    return () => {
+      input.removeEventListener('change', onInputChange)
+    }
+  }, [])
 
   // TODO: Add a bit of padding for rotation when supported
   const rightMost = positions
@@ -110,45 +126,45 @@ export const Keymap: FC = () => {
   return (
     <>
       <div
+        ref={scaleRef}
         className="relative flex size-full items-center justify-center"
         style={{
           height: bottomMost * oneU + 'px',
           width: rightMost * oneU + 'px',
-          transform: `scale(${scale})`,
         }}
       >
-        {positions.map((p, idx) => (
-          <div
-            key={idx}
-            onClick={() =>
-              setSelectedKeyPosition((prev: number | undefined) =>
-                prev !== idx ? idx : undefined,
-              )
-            }
-            className="absolute leading-[0] data-[zoomer=true]:hover:z-[1000]"
-            data-zoomer={true}
-            style={scalePosition(p, oneU)}
-          >
-            <Key
-              hoverZoom={true}
-              oneU={oneU}
-              selected={idx === selectedKeyPosition}
-              {...p}
-            />
-          </div>
-        ))}
+        {positions.length > 0 &&
+          positions.map((p, idx) => (
+            <div
+              key={idx}
+              onClick={() =>
+                setSelectedKeyPosition((prev: number | undefined) =>
+                  prev !== idx ? idx : undefined,
+                )
+              }
+              className="absolute leading-[0] data-[zoomer=true]:hover:z-[1000]"
+              data-zoomer={true}
+              style={scalePosition(p, oneU)}
+            >
+              <Key
+                hoverZoom={true}
+                oneU={oneU}
+                selected={idx === selectedKeyPosition}
+                {...p}
+              />
+            </div>
+          ))}
       </div>
 
       {/* eslint-disable-next-line tailwindcss/no-unnecessary-arbitrary-value */}
       <div className="absolute bottom-[240px] left-[50%] ml-[-220px] w-[440px]">
         <input
           type="range"
+          name="scale"
           min={0.75}
           max={2}
-          step={0.1}
-          value={scale}
-          onChange={onChange}
-          onMouseUp={onSliderEnd}
+          step={0.02}
+          ref={inputRef}
         />
       </div>
     </>
