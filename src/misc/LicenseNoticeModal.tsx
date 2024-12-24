@@ -14,7 +14,7 @@ export const LicenseNoticeModal: FC<PropsWithChildren> = ({ children }) => {
         {children}
       </a>
       <Modal open={open} onOpenChange={setOpen}>
-        <ModalContent>
+        <ModalContent className="w-[60vw]">
           <div className="flex justify-between items-start">
             <p className="mr-2">
               ZMK Studio is released under the open source Apache 2.0 license. A

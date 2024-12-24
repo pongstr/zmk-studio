@@ -181,7 +181,7 @@ export const AboutModal: FC<PropsWithChildren> = ({ children }) => {
         {children}
       </a>
       <Modal open={open} onOpenChange={setOpen}>
-        <ModalContent>
+        <ModalContent className="w-[70vw]">
           <div className="flex justify-between items-start">
             <p>
               The ZMK Project:{" "}
