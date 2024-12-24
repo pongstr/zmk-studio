@@ -80,7 +80,7 @@ export const Modal: FC<PropsWithChildren<Omit<ModalContextType, "id">>> = ({
 
   return (
     <ModalContext.Provider value={{ id: dialogId, open, onOpenChange }}>
-      <dialog ref={dialogRef} className="group">
+      <dialog id={dialogId} ref={dialogRef} className="group">
         <div className="fixed w-full h-full overflow-y inset-0 grid place-content-center bg-black/30 backdrop-blur-sm opacity-0 transition-all duration-300 ease-in-out group-data-[open]:opacity-100 group-data-[closing]:opacity-0">
           <div
             className="overflow-y-auto w-screen h-screen place-content-center scale-75 py-10 opacity-0 shadow-lg transition-all duration-300 ease-out group-data-[open]:scale-100 group-data-[open]:opacity-100 group-data-[closing]:scale-75 group-data-[closing]:opacity-0"
