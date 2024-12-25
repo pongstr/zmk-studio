@@ -29,8 +29,8 @@ import { BehaviorBindingPicker } from "../behaviors/BehaviorBindingPicker";
 import { produce } from "immer";
 import { LockStateContext } from "../rpc/LockStateContext";
 import { LockState } from "@zmkfirmware/zmk-studio-ts-client/core";
+import { KeyboardViewport } from "./KeyboardViewport";
 import { LayoutZoom } from "./PhysicalLayout";
-import { useLocalStorageState } from "../misc/useLocalStorageState";
 
 type BehaviorMap = Record<number, GetBehaviorDetailsResponse>;
 
@@ -176,14 +176,6 @@ export default function Keyboard() {
       return keymap?.keymap?.getKeymap;
     },
     true,
-  );
-
-  const [keymapScale, setKeymapScale] = useLocalStorageState<LayoutZoom>(
-    "keymapScale",
-    "auto",
-    {
-      deserialize: deserializeLayoutZoom,
-    },
   );
 
   const [selectedLayerIndex, setSelectedLayerIndex] = useState<number>(0);
@@ -551,6 +543,7 @@ export default function Keyboard() {
         )}
       </div>
       {layouts && keymap && behaviors && (
+<<<<<<< HEAD
         <div className="relative col-start-2 row-start-1 grid min-w-0 items-center justify-center p-2">
           <KeymapComp
             keymap={keymap}
@@ -578,6 +571,19 @@ export default function Keyboard() {
             <option value={1.5}>150%</option>
             <option value={2}>200%</option>
           </select>
+=======
+        <div className="col-start-2 row-start-1 flex items-center justify-center relative min-w-0">
+          <KeyboardViewport>
+            <KeymapComp
+              keymap={keymap}
+              layout={layouts[selectedPhysicalLayoutIndex]}
+              behaviors={behaviors}
+              selectedLayerIndex={selectedLayerIndex}
+              selectedKeyPosition={selectedKeyPosition}
+              onKeyPositionClicked={setSelectedKeyPosition}
+            />
+          </KeyboardViewport>
+>>>>>>> fix-zoom-in-out
         </div>
       )}
       {keymap && selectedBinding && (

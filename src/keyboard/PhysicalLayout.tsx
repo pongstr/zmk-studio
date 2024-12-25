@@ -3,9 +3,7 @@ import {
   SetStateAction,
   CSSProperties,
   PropsWithChildren,
-  useLayoutEffect,
   useRef,
-  useState,
 } from "react";
 import { Key } from "./Key";
 
@@ -73,41 +71,6 @@ export const PhysicalLayout = ({
   ...props
 }: PhysicalLayoutProps) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(1);
-
-  useLayoutEffect(() => {
-    const element = ref.current;
-    if (!element) return;
-
-    const parent = element.parentElement;
-    if (!parent) return;
-
-    const calculateScale = () => {
-      if (props.zoom === "auto") {
-        const padding = Math.min(window.innerWidth, window.innerHeight) * 0.05; // Padding when in auto mode
-        const newScale = Math.min(
-          parent.clientWidth / (element.clientWidth + 2 * padding),
-          parent.clientHeight / (element.clientHeight + 2 * padding),
-        );
-        setScale(newScale);
-      } else {
-        setScale(props.zoom || 1);
-      }
-    };
-
-    calculateScale(); // Initial calculation
-
-    const resizeObserver = new ResizeObserver(() => {
-      calculateScale();
-    });
-
-    resizeObserver.observe(element);
-    resizeObserver.observe(parent);
-
-    return () => {
-      resizeObserver.disconnect();
-    };
-  }, [props.zoom]);
 
   // TODO: Add a bit of padding for rotation when supported
   const rightMost = positions
@@ -144,7 +107,6 @@ export const PhysicalLayout = ({
       style={{
         height: bottomMost * oneU + "px",
         width: rightMost * oneU + "px",
-        transform: `scale(${scale})`,
       }}
       ref={ref}
       {...props}
