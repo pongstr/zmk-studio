@@ -30,13 +30,8 @@ import { produce } from "immer";
 import { LockStateContext } from "../rpc/LockStateContext";
 import { LockState } from "@zmkfirmware/zmk-studio-ts-client/core";
 import { KeyboardViewport } from "./KeyboardViewport";
-import { LayoutZoom } from "./PhysicalLayout";
 
 type BehaviorMap = Record<number, GetBehaviorDetailsResponse>;
-
-function deserializeLayoutZoom(value: string): LayoutZoom {
-  return value === "auto" ? "auto" : parseFloat(value) || "auto";
-}
 
 function useBehaviors(): BehaviorMap {
   const connection = useContext(ConnectionContext);
@@ -543,35 +538,6 @@ export default function Keyboard() {
         )}
       </div>
       {layouts && keymap && behaviors && (
-<<<<<<< HEAD
-        <div className="relative col-start-2 row-start-1 grid min-w-0 items-center justify-center p-2">
-          <KeymapComp
-            keymap={keymap}
-            layout={layouts[selectedPhysicalLayoutIndex]}
-            behaviors={behaviors}
-            scale={keymapScale}
-            selectedLayerIndex={selectedLayerIndex}
-            selectedKeyPosition={selectedKeyPosition}
-            onKeyPositionClicked={setSelectedKeyPosition}
-          />
-          <select
-            className="absolute right-2 top-2 h-8 rounded px-2"
-            value={keymapScale}
-            onChange={(e) => {
-              const value = deserializeLayoutZoom(e.target.value);
-              setKeymapScale(value);
-            }}
-          >
-            <option value="auto">Auto</option>
-            <option value={0.25}>25%</option>
-            <option value={0.5}>50%</option>
-            <option value={0.75}>75%</option>
-            <option value={1}>100%</option>
-            <option value={1.25}>125%</option>
-            <option value={1.5}>150%</option>
-            <option value={2}>200%</option>
-          </select>
-=======
         <div className="col-start-2 row-start-1 flex items-center justify-center relative min-w-0">
           <KeyboardViewport>
             <KeymapComp
@@ -583,7 +549,6 @@ export default function Keyboard() {
               onKeyPositionClicked={setSelectedKeyPosition}
             />
           </KeyboardViewport>
->>>>>>> fix-zoom-in-out
         </div>
       )}
       {keymap && selectedBinding && (
