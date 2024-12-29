@@ -262,15 +262,20 @@ const NoTransportsOptionsPrompt: FC = () => {
   );
 };
 
-const ConnectOptions: FC<ConnectModalProps> = ({
+const ConnectOptions: FC<ConnectModalProps & { hasTransports: boolean }> = ({
   open,
   transports,
   onTransportCreated,
+  hasTransports,
 }) => {
   const simpleMode = useMemo(
     () => transports.every((t) => !t.pick_and_connect),
     [transports],
   );
+
+  if (!hasTransports) {
+    return <NoTransportsOptionsPrompt />;
+  }
 
   if (simpleMode) {
     return <SimpleDevicePicker {...{ transports, onTransportCreated }} />;
@@ -284,7 +289,7 @@ export const ConnectModal = ({
   transports,
   onTransportCreated,
 }: ConnectModalProps) => {
-  const haveTransports = useMemo(() => transports.length > 0, [transports]);
+  const hasTransports = useMemo(() => transports.length > 0, [transports]);
 
   return (
     <Modal
@@ -298,13 +303,14 @@ export const ConnectModal = ({
         showCloseButton={false}
       >
         <ZmkStudio />
-        {haveTransports ? (
-          <ConnectOptions {...{ open, transports, onTransportCreated }} />
-        ) : (
-          <NoTransportsOptionsPrompt />
-        )}
-        <div className="text-xs opacity-40 pointer-events-none select-none">
-          <AppFooter />
+        <ConnectOptions
+          open={open}
+          transports={transports}
+          onTransportCreated={onTransportCreated}
+          hasTransports={hasTransports}
+        />
+        <div className="text-xs text-center opacity-40 select-none">
+          <span>&copy; 2024 - The ZMK Contributors</span>
         </div>
       </ModalContent>
     </Modal>
