@@ -8,7 +8,7 @@ import {
   Selection,
   useDragAndDrop,
 } from "react-aria-components";
-import { Modal, ModalContent } from "../components/modal/Modal.tsx";
+import { Modal, ModalContent } from "@/components/modal/Modal.tsx";
 
 interface Layer {
   id: number;
@@ -66,12 +66,12 @@ const EditLabelModal = ({
 
   return (
     <Modal open={open} onOpenChange={onClose}>
-      <ModalContent className="min-w-min w-[30vw] flex flex-col">
+      <ModalContent className="flex w-[30vw] min-w-min flex-col">
         {editLabelData && (
           <>
             <span className="mb-3 text-lg">New Layer Name</span>
             <input
-              className="p-1 border rounded border-base-content border-solid"
+              className="rounded border border-solid border-base-content p-1"
               type="text"
               defaultValue={editLabelData.name}
               autoFocus
@@ -84,11 +84,11 @@ const EditLabelModal = ({
               }}
             />
             <div className="mt-4 flex justify-end">
-              <button className="py-1.5 px-2" type="button" onClick={onClose}>
+              <button className="px-2 py-1.5" type="button" onClick={onClose}>
                 Cancel
               </button>
               <button
-                className="py-1.5 px-2 ml-4 rounded-md bg-gray-100 text-black hover:bg-gray-300"
+                className="ml-4 rounded-md bg-gray-100 px-2 py-1.5 text-black hover:bg-gray-300"
                 type="button"
                 disabled={!!editLabelData}
                 onClick={() => {

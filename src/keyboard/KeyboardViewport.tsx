@@ -1,5 +1,5 @@
 import { FC, PropsWithChildren, useEffect, useRef } from "react";
-import { useLocalStorageState } from "../misc/useLocalStorageState";
+import { useLocalStorageState } from "@/misc/useLocalStorageState";
 import { ExpandIcon, MaximizeIcon, ShrinkIcon } from "lucide-react";
 
 type KeyboardViewportType = PropsWithChildren<{
@@ -99,16 +99,16 @@ export const KeyboardViewport: FC<KeyboardViewportType> = ({
         {children}
       </div>
 
-      <div className="absolute bottom-8 left-0 flex justify-center items-center w-full gap-1 rounded-xl bg-muted py-1 select-none bg-base-300">
+      <div className="bg-muted absolute bottom-8 left-0 flex w-full select-none items-center justify-center gap-1 rounded-xl bg-base-300 py-1">
         <button
-          className="block h-9 px-4 py-1.5 bg-base-100 rounded-l-lg disabled:opacity-50 disabled:cursor-not-allowed"
+          className="block h-9 rounded-l-lg bg-base-100 px-4 py-1.5 disabled:cursor-not-allowed disabled:opacity-50"
           disabled={scale <= 0.25}
           onClick={() => setScale((prev: number) => prev - 0.05)}
         >
           <ShrinkIcon className="size-4" />
           <span className="sr-only">Decrease scale</span>
         </button>
-        <div className="flex h-9 px-2 justify-center items-center bg-base-100">
+        <div className="flex h-9 items-center justify-center bg-base-100 px-2">
           <input
             type="range"
             name="scale"
@@ -121,7 +121,7 @@ export const KeyboardViewport: FC<KeyboardViewportType> = ({
           />
         </div>
         <button
-          className="block h-9 px-4 py-1.5 bg-base-100 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="block h-9 bg-base-100 px-4 py-1.5 disabled:cursor-not-allowed disabled:opacity-50"
           disabled={scale >= 2}
           onClick={() => setScale((prev: number) => prev + 0.05)}
         >
@@ -129,7 +129,7 @@ export const KeyboardViewport: FC<KeyboardViewportType> = ({
           <span className="sr-only">Increase scale</span>
         </button>
         <button
-          className="block px-4 py-1.5 bg-base-100 rounded-r-lg h-9 disabled:opacity-50 disabled:cursor-not-allowed"
+          className="block h-9 rounded-r-lg bg-base-100 px-4 py-1.5 disabled:cursor-not-allowed disabled:opacity-50"
           onClick={resetScale}
         >
           <MaximizeIcon className="size-4" />

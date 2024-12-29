@@ -16,7 +16,7 @@ import {
 import {
   hid_usage_from_page_and_id,
   hid_usage_page_get_ids,
-} from "../hid-usages";
+} from "@/hid-usages";
 import { useCallback, useMemo } from "react";
 import { ChevronDown } from "lucide-react";
 

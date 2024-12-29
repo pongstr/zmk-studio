@@ -3,7 +3,7 @@ import { Modal as ModalComponent, ModalContent as Content } from "./Modal";
 
 import { useState } from "react";
 import { ModalContent } from "./ModalContent.stories";
-import { ZmkStudio } from "../ZmkStudio";
+import { ZmkStudio } from "@/components/ZmkStudio";
 
 const meta = {
   title: "UI/Modal",

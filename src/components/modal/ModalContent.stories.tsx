@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { Modal as ModalComponent, ModalContent as Content } from "./Modal";
-import { ZmkStudio } from "../ZmkStudio";
+import { ZmkStudio } from "@/components/ZmkStudio";
 
 const meta = {
   title: "UI/Modal/ModalContent",

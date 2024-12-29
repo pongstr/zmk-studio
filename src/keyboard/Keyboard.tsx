@@ -8,7 +8,7 @@ import React, {
 } from "react";
 
 import { Request } from "@zmkfirmware/zmk-studio-ts-client";
-import { call_rpc } from "../rpc/logging";
+import { call_rpc } from "@/rpc/logging";
 import {
   PhysicalLayout,
   Keymap,
@@ -22,12 +22,12 @@ import type { GetBehaviorDetailsResponse } from "@zmkfirmware/zmk-studio-ts-clie
 import { LayerPicker } from "./LayerPicker";
 import { PhysicalLayoutPicker } from "./PhysicalLayoutPicker";
 import { Keymap as KeymapComp } from "./Keymap";
-import { useConnectedDeviceData } from "../rpc/useConnectedDeviceData";
-import { ConnectionContext } from "../rpc/ConnectionContext";
-import { UndoRedoContext } from "../undoRedo";
-import { BehaviorBindingPicker } from "../behaviors/BehaviorBindingPicker";
+import { useConnectedDeviceData } from "@/rpc/useConnectedDeviceData";
+import { ConnectionContext } from "@/rpc/ConnectionContext";
+import { UndoRedoContext } from "@/undoRedo";
+import { BehaviorBindingPicker } from "@/behaviors/BehaviorBindingPicker";
 import { produce } from "immer";
-import { LockStateContext } from "../rpc/LockStateContext";
+import { LockStateContext } from "@/rpc/LockStateContext";
 import { LockState } from "@zmkfirmware/zmk-studio-ts-client/core";
 import { KeyboardViewport } from "./KeyboardViewport";
 
@@ -538,7 +538,7 @@ export default function Keyboard() {
         )}
       </div>
       {layouts && keymap && behaviors && (
-        <div className="col-start-2 row-start-1 flex items-center justify-center relative min-w-0">
+        <div className="relative col-start-2 row-start-1 flex min-w-0 items-center justify-center">
           <KeyboardViewport>
             <KeymapComp
               keymap={keymap}

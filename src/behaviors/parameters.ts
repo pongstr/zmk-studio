@@ -1,10 +1,10 @@
 import { BehaviorParameterValueDescription } from "@zmkfirmware/zmk-studio-ts-client/behaviors";
-import { hid_usage_page_and_id_from_usage } from "../hid-usages";
+import { hid_usage_page_and_id_from_usage } from "@/hid-usages";
 
 export function validateValue(
   layerIds: number[],
   value?: number,
-  values?: BehaviorParameterValueDescription[]
+  values?: BehaviorParameterValueDescription[],
 ): boolean {
   if (value === undefined) {
     return values === undefined || values?.length === 0 || !!values[0].nil;
