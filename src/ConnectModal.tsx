@@ -8,7 +8,6 @@ import { Key, ListBox, ListBoxItem, Selection } from "react-aria-components";
 import { ExternalLink } from "./misc/ExternalLink";
 import { Modal, ModalContent } from "./components/modal/Modal";
 import { ZmkStudio } from "./components/ZmkStudio";
-import { AppFooter } from "./AppFooter";
 
 export type TransportFactory = {
   label: string;
@@ -202,7 +201,7 @@ const SimpleDevicePicker: FC<Omit<ConnectModalProps, "open">> = ({
   return (
     <div>
       <p className="text-sm">Select a connection type.</p>
-      <ul className="flex justify-center items-center gap-2 pt-2">
+      <ul className="flex items-center justify-center gap-2 pt-2">
         {connections}
       </ul>
       {selectedTransport && availableDevices && (
@@ -299,7 +298,7 @@ export const ConnectModal = ({
       onBackdropClose={false}
     >
       <ModalContent
-        className="w-11/12 sm:w-10/12 md:w-8/12 lg:w-5/12 xl:w-4/12 mx-auto min-h-48 flex flex-col justify-between items-center gap-6 pt-8 pb-2"
+        className="mx-auto flex min-h-48 w-11/12 flex-col items-center justify-between gap-6 pb-2 pt-8 sm:w-10/12 md:w-8/12 lg:w-5/12 xl:w-4/12"
         showCloseButton={false}
       >
         <ZmkStudio />
@@ -309,7 +308,7 @@ export const ConnectModal = ({
           onTransportCreated={onTransportCreated}
           hasTransports={hasTransports}
         />
-        <div className="text-xs text-center opacity-40 select-none">
+        <div className="select-none text-center text-xs opacity-40">
           <span>&copy; 2024 - The ZMK Contributors</span>
         </div>
       </ModalContent>
