@@ -8,7 +8,7 @@
     "build": "tsc && vite build",
     "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "preview": "npm run build && vite preview",
-    "tauri": "tauri dev",
+    "tauri": "tauri",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build"
   },
@@ -36,7 +36,7 @@
     "@storybook/react-vite": "^8.4.7",
     "@storybook/test": "^8.4.7",
     "@storybook/theming": "^8.4.7",
-    "@tauri-apps/cli": "^2.0.0-beta.20",
+    "@tauri-apps/cli": "^2.1.0",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
     "@types/w3c-web-serial": "^1.0.6",
