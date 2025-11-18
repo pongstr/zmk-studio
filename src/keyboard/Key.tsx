@@ -84,9 +84,14 @@ export const Key = ({
         ].join(" ")}
       >
         {header && (
+          <div>
           <span className="absolute	inset-x-1 top-1 hidden h-4 w-9/12 truncate whitespace-nowrap text-center text-micro uppercase leading-none group-hover:block">
             {header}
           </span>
+          <span className="absolute	inset-x-1 top-1 h-4 w-auto truncate whitespace-nowrap text-left text-micro leading-none group-hover:hidden">
+            {header}
+          </span>
+          </div>
         )}
 
         {props.children &&
