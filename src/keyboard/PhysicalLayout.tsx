@@ -8,6 +8,7 @@ import {
 import { Key } from "./Key";
 
 export type KeyPosition = PropsWithChildren<{
+  id: string;
   header?: string;
   width: number;
   height: number;
@@ -52,10 +53,14 @@ function scalePosition(
   let top = y * oneU;
   let transformOrigin = undefined;
   let transform = undefined;
+  const transformStyle = "preserve-3d";
 
   if (r) {
-    let transformX = ((rx || x) - x) * oneU;
-    let transformY = ((ry || y) - y) * oneU;
+    // Use `??` so an explicit rotation origin of 0 is honored; `rx || x`
+    // collapsed a legitimate 0 back to the key's own position, pivoting the
+    // key around its own corner instead of the layout origin (#97).
+    let transformX = ((rx ?? x) - x) * oneU;
+    let transformY = ((ry ?? y) - y) * oneU;
     transformOrigin = `${transformX}px ${transformY}px`;
     transform = `rotate(${r}deg)`;
   }
@@ -65,7 +70,7 @@ function scalePosition(
     left,
     transformOrigin,
     transform,
-    willChange: "transform",
+    transformStyle,
   };
 }
 
@@ -73,7 +78,6 @@ export const PhysicalLayout = ({
   positions,
   selectedPosition,
   oneU = 48,
-  hoverZoom = true,
   onPositionClicked,
   ...props
 }: PhysicalLayoutProps) => {
@@ -123,19 +127,17 @@ export const PhysicalLayout = ({
     .reduce((a, b) => Math.max(a, b), 0);
 
   const positionItems = positions.map((p, idx) => (
-    <div
-      key={idx}
-      onClick={() => onPositionClicked?.(idx)}
-      className="absolute data-[zoomer=true]:hover:z-[1000] leading-[0]"
-      data-zoomer={hoverZoom}
-      style={scalePosition(p, oneU)}
-    >
-      <Key
-        hoverZoom={hoverZoom}
-        oneU={oneU}
-        selected={idx === selectedPosition}
-        {...p}
-      />
+    <div className="absolute hover:z-10" style={scalePosition(p, oneU)}>
+      <div
+        key={p.id}
+        onClick={() => onPositionClicked?.(idx)}
+      >
+        <Key
+          oneU={oneU}
+          selected={idx === selectedPosition}
+          {...p}
+        />
+      </div>
     </div>
   ));
 
@@ -146,6 +148,7 @@ export const PhysicalLayout = ({
         height: bottomMost * oneU + "px",
         width: rightMost * oneU + "px",
         transform: `scale(${scale})`,
+        transformStyle: "preserve-3d",
       }}
       ref={ref}
       {...props}
