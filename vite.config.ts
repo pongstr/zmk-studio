@@ -27,6 +27,13 @@ export default defineConfig({
     minify: !process.env.TAURI_DEBUG ? "esbuild" : false,
     // produce sourcemaps for debug builds
     sourcemap: !!process.env.TAURI_DEBUG,
+    // include download page
+    rollupOptions: {
+      input: {
+        main: "./index.html",
+        download: "./download.html",
+      },
+    }
   },
   optimizeDeps: {
     force: true
